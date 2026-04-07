@@ -112,6 +112,70 @@
 \newpage
 
 \section{Parameters}
+
+% =========================================
+\subsection{Distance Parameters}
+
+All distances are measured in kilometers (km).
+
+\begin{itemize}
+    \item $d^{CD,DS}_{ij}$: distance from distribution center $i \in CD$ to dark store $j \in DS$.
+
+    \item $d^{MDCP}_{ij}$: distance between parking locations $i,j \in MDCP$.
+
+    \item $d^{CD,P}_{ij}$: distance from distribution center $i \in CD$ to port $j \in P$.
+
+    \item $d^{CD,A}_{ij}$: distance from distribution center $i \in CD$ to airport $j \in A$.
+
+    \item $d^{CD,WM}_{ij}$: distance from distribution center $i \in CD$ to wholesale market $j \in WM$.
+\end{itemize}
+
+% =========================================
+\subsection{Coverage Parameters}
+
+\begin{itemize}
+    \item $z_i$: binary variable indicating if facility $i$ is active in a coverage combination.
+
+    \item $p(z)$: population covered exactly by combination $z$.
+\end{itemize}
+
+% =========================================
+\subsection{Cost Parameters}
+
+\begin{itemize}
+    \item $c^{buy}_{k,s,r}$: purchase cost (USD/kg) of product $k \in K$ from supplier $s \in S$ using transport mode $r \in R$.
+
+    \item $c^{WM}_{k,w}$: purchase cost (USD/kg) of product $k \in K$ at wholesale market $w \in WM$.
+
+    \item $v_k$: selling price (USD/kg) of product $k \in K$.
+\end{itemize}
+
+% =========================================
+\subsection{Availability Parameters}
+
+\begin{itemize}
+    \item $a_{k,s,t}$: binary parameter equal to 1 if product $k \in K$ is available from supplier $s \in S$ in period $t \in T$.
+
+    \item $g_{k,r}$: binary parameter equal to 1 if product $k \in K$ can be transported using mode $r \in R$.
+
+    \item $u^{P}_{s,p}$: binary parameter equal to 1 if supplier $s \in S$ can ship through port $p \in P$.
+
+    \item $u^{A}_{s,a}$: binary parameter equal to 1 if supplier $s \in S$ can ship through airport $a \in A$.
+\end{itemize}
+
+% =========================================
+\subsection{Transportation Parameters}
+
+\begin{itemize}
+    \item $t_{s,r}$: transportation time (days) from supplier $s \in S$ using mode $r \in R$.
+\end{itemize}
+
+% =========================================
+\subsection{Demand Parameters}
+
+\begin{itemize}
+    \item $q_k$: demand rate (kg/person/week) of product $k \in K$.
+\end{itemize}
 \newpage
 
 \section{Decision Variables}
