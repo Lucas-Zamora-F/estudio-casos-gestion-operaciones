@@ -9,6 +9,10 @@
 \usepackage{graphicx}
 \usepackage{setspace}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{rotating}
+\usepackage{pdflscape}
+
 
 \geometry{a4paper, margin=2.5cm}
 
@@ -64,6 +68,26 @@
 \newpage
 
 \section{Model Assumptions}
+
+\begin{itemize}
+    \item Demand for each product is assumed to be constant across all time periods.
+    
+    \item Households are assumed to be homogeneous in terms of consumption rates and ordering behavior.
+    
+    \item Each household places exactly one order per week, consistently across all weeks.
+    
+    \item All transportation and replenishment processes are assumed to be instantaneous. Therefore, products purchased from any supplier are assumed to arrive immediately at the corresponding port, airport, or distribution center, and any subsequent transfers within the network are also assumed to occur without delay.
+
+    \item Last-mile delivery distances are approximated using an average distance from each facility type to the households within its coverage area.
+    
+    \item Households are assumed to be uniformly distributed within the coverage area of each facility.
+    
+    \item Delivery routes are not explicitly modeled; instead, transportation costs are approximated using average distances.
+    
+\end{itemize}
+
+\newpage
+
 \newpage
 
 \section{Sets}
@@ -73,6 +97,8 @@
     \item $DS$: set of candidate dark stores.
     
     \item $MDCP$: set of candidate parking locations for mobile distribution centers.
+    
+    \item $F = CD \cup DS \cup MDCP$: set of all candidate facilities in the network.
     
     \item $P$: set of ports:
     \[
@@ -91,28 +117,34 @@
     
     \item $S$: set of supplier countries:
     \[
-    S = \{\text{US}, \text{Mexico}, \text{Peru}, \text{Ecuador}, \text{Bolivia}, \text{Argentina}, \text{Spain}, \text{Chile}\}
+    \begin{aligned}
+    S = \{ & \mathrm{US}, \mathrm{Mexico}, \mathrm{Peru}, \mathrm{Ecuador}, \\
+        & \mathrm{Bolivia}, \mathrm{Argentina}, \mathrm{Spain}, \\
+        & \mathrm{Chile\text{-}Scl}, \mathrm{Chile\text{-}Vap}, \\
+        & \mathrm{Chile\text{-}Maul}, \mathrm{Chile\text{-}Coq} \}
+    \end{aligned}
     \]
-    
+
     \item $K$: set of products:
     \[
     K = \{\text{Roma Tomatoes}, \text{Cauliflower}, \text{Broccoli}, \text{Asparagus}, \text{Green Bell Pepper}\}
     \]
     
-    \item $M$: set of months in the planning horizon:
+    \item $T$: set of weeks in the planning horizon:
     \[
-    M = \{\text{Jan}, \text{Feb}, \text{Mar}, \text{Apr}, \text{May}, \text{Jun}, \text{Jul}, \text{Aug}, \text{Sep}, \text{Oct}, \text{Nov}, \text{Dec}\}
+    T = \{1, 2, \dots, 52\}
     \]
     
     \item $R$: set of transportation modes:
     \[
-    R = \{\text{sea}, \text{air}\}
+    R = \{\text{sea}, \text{air}, \text{truck}\}
     \]
 
-    \item $I$: set of facilities considered in the coverage model, where
-    \[
-    I \subseteq CD \cup DS \cup MDCP
-    \]
+    \item $\mathcal{Z}$: set of all feasible facility configurations, where each $z \in \mathcal{Z}$ is a binary vector in $\{0,1\}^{|F|}$, excluding the null configuration.
+
+    \item $I \subseteq \mathcal{Z}$: set of singleton facility configurations, where each $i \in I$ is a binary vector with exactly one component equal to 1 and all others equal to 0.
+    
+
 \end{itemize}
 \newpage
 
@@ -133,16 +165,23 @@ All distances are measured in kilometers (km).
     \item $d^{CD,A}_{ij}$: distance from distribution center $i \in CD$ to airport $j \in A$.
 
     \item $d^{CD,WM}_{ij}$: distance from distribution center $i \in CD$ to wholesale market $j \in WM$.
+    
+    \item $d^{S_{cl},CD}_{ij}$: distance from Chilean supplier $i \in S_{cl}$ to distribution center $j \in CD$ (direct transport).
+    
+    \item $\bar{d}_f$: average distance (km) from facility $f \in F$ to the households it serves.
+    
 \end{itemize}
 
 % =========================================
 \subsection{Coverage Parameters}
 
 \begin{itemize}
-
-    \item $z = (z_i)_{i \in I}$: binary tuple representing a coverage combination, where $z_i \in \{0,1\}$ indicates whether facility $i \in I$ is active in the combination.
-
-    \item $p(z)$: number of households (population) covered exactly by combination $z$.
+    \item $z \in \{0,1\}^{|F|}$: binary vector representing a facility configuration, where each component indicates whether a specific facility is open (1) or closed (0). The components of $z$ are ordered such that the first $|CD|$ elements correspond to distribution centers (CD), the next $|DS|$ elements correspond to dark stores (DS), and the last $|MDCP|$ elements correspond to mobile distribution centers (MDCP).
+    
+    \item $p(z)$: number of households that can be covered under facility configuration $z$, for all $z \in \mathcal{Z}$.
+    
+    \item $P_i = p(i)$: maximum number of households that can be covered by singleton configuration $i \in I$.
+    
 \end{itemize}
 
 % =========================================
@@ -154,6 +193,13 @@ All distances are measured in kilometers (km).
     \item $c^{WM}_{k,w}$: purchase cost (USD/kg) of product $k \in K$ at wholesale market $w \in WM$.
 
     \item $v_k$: selling price (USD/kg) of product $k \in K$.
+    
+    \item $c^{tr}$: transportation cost per kg per km by truck (USD/kg/km).
+    
+    \item $c^{del}$: last-mile delivery cost per kg per km (USD/kg/km).
+    
+    \item $c^{mov}$: movement cost per kilometer (USD/km) for the mobile distribution center.
+
 \end{itemize}
 
 % =========================================
@@ -191,6 +237,8 @@ All distances are measured in kilometers (km).
     t^{city}_{i,j} = \alpha^{city} \cdot d_{i,j}
     \]
 
+    \item $g(z)$: minimum total travel distance (km) required for the mobile distribution center to visit all active parking locations in configuration $z \in \mathcal{Z}$ and return to its starting point.
+
 \end{itemize}
 
 % =========================================
@@ -198,15 +246,173 @@ All distances are measured in kilometers (km).
 
 \begin{itemize}
     \item $q_k$: demand rate (kg/person/week) of product $k \in K$.
+    
+    \item $\bar{h}$: average number of people per household (persons/household).
+    
+    \item $f^{del}$: flat delivery fee per order (USD/order), equal to 2.5 USD.
 \end{itemize}
 \newpage
 
 \section{Decision Variables}
+
+\begin{itemize}
+
+    \item $x_z \in \{0,1\}$: equals 1 if facility configuration $z \in \mathcal{Z}$ is selected, and 0 otherwise.
+
+    \item $H_t$: number of households served in week $t \in T$.
+    
+    \item $x_{k,s,t} \geq 0$: quantity (kg) of product $k \in K$ purchased from supplier $s \in S$ in period $t \in T$.
+    
+    \item $x_{k,w,t} \geq 0$: quantity (kg) of product $k \in K$ purchased from wholesale market $w \in WM$ in period $t \in T$.
+    
+    \item $y^{P}_{k,p,i,t} \geq 0$: quantity (kg) of product $k \in K$ transported from port $p \in P$ to distribution center $i \in CD$ in period $t \in T$.
+    
+    \item $y^{A}_{k,a,i,t} \geq 0$: quantity (kg) of product $k \in K$ transported from airport $a \in A$ to distribution center $i \in CD$ in period $t \in T$.
+    
+    \item $y^{S}_{k,s,i,t} \geq 0$: quantity (kg) of product $k \in K$ transported from Chilean supplier $s \in S_{cl}$ to distribution center $i \in CD$ in period $t \in T$.
+    
+    \item $y^{WM}_{k,w,i,t} \geq 0$: quantity (kg) of product $k \in K$ transported from wholesale market $w \in WM$ to distribution center $i \in CD$ in period $t \in T$.
+    
+    \item $y^{CD,DS}_{k,i,j,t} \geq 0$: quantity (kg) of product $k \in K$ transported from distribution center $i \in CD$ to dark store $j \in DS$ in period $t \in T$.
+    
+    \item $h_{f,t} \geq 0$: number of households served by facility $f \in F$ in period $t \in T$.
+    
+    
+\end{itemize}
 \newpage
 
 \section{Objective Function}
-\newpage
 
+The objective is to maximize total profit over the planning horizon, defined as total revenue minus all relevant costs.
+
+\vspace{0.3cm}
+
+\textbf{Revenue:}
+\[
+\sum_{t \in T} 
+\left[
+    H_t \cdot 
+    \left(
+        \bar{h} \cdot \sum_{k \in K} q_k \cdot v_k
+        + f^{del}
+    \right)
+\right]
+\]
+
+\vspace{0.3cm}
+
+\textbf{Purchasing Cost:}
+\[
+\sum_{t \in T}
+\left[
+    \sum_{k \in K} \sum_{s \in S} c^{buy}_{k,s} \, x_{k,s,t}
+    +
+    \sum_{k \in K} \sum_{w \in WM} c^{WM}_{k,w} \, x_{k,w,t}
+\right]
+\]
+
+\vspace{0.3cm}
+
+\textbf{Long Haul Cost:}
+\[
+\sum_{t \in T}
+\Bigg[
+    \sum_{k \in K} \sum_{p \in P} \sum_{i \in CD} 
+    c^{tr} \cdot d^{CD,P}_{i,p} \cdot y^{P}_{k,p,i,t}
+    +
+    \sum_{k \in K} \sum_{a \in A} \sum_{i \in CD} 
+    c^{tr} \cdot d^{CD,A}_{i,a} \cdot y^{A}_{k,a,i,t}
+\]
+\[
+    +
+    \sum_{k \in K} \sum_{s \in S_{cl}} \sum_{i \in CD} 
+    c^{tr} \cdot d^{S_{cl},CD}_{s,i} \cdot y^{S}_{k,s,i,t}
+    +
+    \sum_{k \in K} \sum_{w \in WM} \sum_{i \in CD} 
+    c^{tr} \cdot d^{CD,WM}_{i,w} \cdot y^{WM}_{k,w,i,t}
+\Bigg]
+\]
+
+\vspace{0.3cm}
+
+\textbf{Inter-Facility Transportation Cost:}
+\[
+\sum_{t \in T}
+\left[
+    \sum_{k \in K} \sum_{i \in CD} \sum_{j \in DS}
+    c^{tr} \cdot d^{CD,DS}_{i,j} \cdot y^{CD,DS}_{k,i,j,t}
+\right]
+\]
+
+\vspace{0.3cm}
+
+\textbf{Last-Mile Delivery Cost:}
+\[
+\sum_{t \in T} \sum_{f \in F}
+c^{del}\,\bar{d}_f\,h_{f,t}
+\left(\bar{h}\sum_{k \in K} q_k\right)
+\]
+
+\vspace{0.3cm}
+
+\textbf{Mobile Distribution Center Movement Cost:}
+\[
+\sum_{t \in T} \sum_{z \in \mathcal{Z}} c^{mov}\, g(z)\, x_z
+\]
+
+\vspace{0.5cm}
+
+\clearpage
+\begin{landscape}
+
+\vspace{0.5cm}
+
+\resizebox{0.95\linewidth}{!}{$
+\begin{aligned}
+\max \quad 
+& \sum_{t \in T} 
+\left[
+    H_t \left(
+        \bar{h} \sum_{k \in K} q_k v_k + f^{del}
+    \right)
+\right] \\
+& - \sum_{t \in T}
+\left[
+    \sum_{k \in K} \sum_{s \in S} c^{buy}_{k,s} x_{k,s,t}
+    +
+    \sum_{k \in K} \sum_{w \in WM} c^{WM}_{k,w} x_{k,w,t}
+\right] \\
+& - \sum_{t \in T}
+\Bigg[
+    \sum_{k \in K} \sum_{p \in P} \sum_{i \in CD} 
+    c^{tr} d^{CD,P}_{i,p} y^{P}_{k,p,i,t}
+    +
+    \sum_{k \in K} \sum_{a \in A} \sum_{i \in CD} 
+    c^{tr} d^{CD,A}_{i,a} y^{A}_{k,a,i,t} \\
+& \qquad +
+    \sum_{k \in K} \sum_{s \in S_{cl}} \sum_{i \in CD} 
+    c^{tr} d^{S_{cl},CD}_{s,i} y^{S}_{k,s,i,t}
+    +
+    \sum_{k \in K} \sum_{w \in WM} \sum_{i \in CD} 
+    c^{tr} d^{CD,WM}_{i,w} y^{WM}_{k,w,i,t}
+\Bigg] \\
+& - \sum_{t \in T}
+\left[
+    \sum_{k \in K} \sum_{i \in CD} \sum_{j \in DS}
+    c^{tr} d^{CD,DS}_{i,j} y^{CD,DS}_{k,i,j,t}
+\right] \\
+& - \sum_{t \in T} \sum_{f \in F}
+c^{del}\,\bar{d}_f\,h_{f,t}
+\left(\bar{h}\sum_{k \in K} q_k\right) \\
+& - \sum_{t \in T} \sum_{z \in \mathcal{Z}} 
+c^{mov}\, g(z)\, x_z
+\end{aligned}
+$}
+
+\end{landscape}
+\clearpage
+
+\newpage
 \section{Constraints}
 \newpage
 
