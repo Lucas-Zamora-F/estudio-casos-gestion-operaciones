@@ -35,7 +35,7 @@ def load_points(csv_path: Path, name_col: str) -> pd.DataFrame:
 
 
 def call_matrix_api(
-    airports: pd.DataFrame,
+    ports: pd.DataFrame,
     distribution_centers: pd.DataFrame,
     profile: str = "driving-hgv",
 ) -> pd.DataFrame:
@@ -43,17 +43,17 @@ def call_matrix_api(
 
     locations = []
 
-    for _, row in airports.iterrows():
+    for _, row in ports.iterrows():
         locations.append([float(row["longitude"]), float(row["latitude"])])
 
     for _, row in distribution_centers.iterrows():
         locations.append([float(row["longitude"]), float(row["latitude"])])
 
-    airport_count = len(airports)
+    port_count = len(ports)
     cd_count = len(distribution_centers)
 
-    sources = list(range(airport_count))
-    destinations = list(range(airport_count, airport_count + cd_count))
+    sources = list(range(port_count))
+    destinations = list(range(port_count, port_count + cd_count))
 
     payload = {
         "locations": locations,
@@ -83,7 +83,7 @@ def call_matrix_api(
 
     distance_matrix = pd.DataFrame(
         data["distances"],
-        index=airports["airport"].tolist(),
+        index=ports["port"].tolist(),
         columns=distribution_centers["cd_name"].tolist(),
     )
 
@@ -140,24 +140,24 @@ def call_directions_api(
 
 
 def compute_all_route_geometries(
-    airports: pd.DataFrame,
+    ports: pd.DataFrame,
     distribution_centers: pd.DataFrame,
     profile: str = "driving-hgv",
     sleep_seconds: float = 0.2,
 ) -> list:
     route_records = []
 
-    for _, airport_row in airports.iterrows():
-        airport_name = airport_row["airport"]
-        origin_lat = airport_row["latitude"]
-        origin_lon = airport_row["longitude"]
+    for _, port_row in ports.iterrows():
+        port_name = port_row["port"]
+        origin_lat = port_row["latitude"]
+        origin_lon = port_row["longitude"]
 
         for _, cd_row in distribution_centers.iterrows():
             cd_name = cd_row["cd_name"]
             destination_lat = cd_row["latitude"]
             destination_lon = cd_row["longitude"]
 
-            print(f"Computing route geometry: {airport_name} -> {cd_name}")
+            print(f"Computing route geometry: {port_name} -> {cd_name}")
 
             try:
                 geometry = call_directions_api(
@@ -168,19 +168,19 @@ def compute_all_route_geometries(
                     profile=profile,
                 )
             except Exception as e:
-                print(f"Warning: route failed for {airport_name} -> {cd_name}: {e}")
+                print(f"Warning: route failed for {port_name} -> {cd_name}: {e}")
                 geometry = None
 
             if geometry is not None:
                 route_records.append(
                     {
-                        "airport": airport_name,
+                        "port": port_name,
                         "cd_name": cd_name,
                         "geometry": geometry,
                     }
                 )
             else:
-                print(f"Warning: no route returned for {airport_name} -> {cd_name}")
+                print(f"Warning: no route returned for {port_name} -> {cd_name}")
 
             time.sleep(sleep_seconds)
 
@@ -190,7 +190,7 @@ def compute_all_route_geometries(
 def build_route_gdf(route_records: list) -> gpd.GeoDataFrame:
     if not route_records:
         return gpd.GeoDataFrame(
-            columns=["airport", "cd_name", "geometry"],
+            columns=["port", "cd_name", "geometry"],
             geometry="geometry",
             crs="EPSG:4326",
         )
@@ -199,14 +199,14 @@ def build_route_gdf(route_records: list) -> gpd.GeoDataFrame:
 
 
 def get_dynamic_map_bounds(
-    airports: pd.DataFrame,
+    ports: pd.DataFrame,
     distribution_centers: pd.DataFrame,
     route_gdf: gpd.GeoDataFrame,
     padding_lon: float = 0.20,
     padding_lat: float = 0.20,
 ):
-    lon_values = airports["longitude"].tolist() + distribution_centers["longitude"].tolist()
-    lat_values = airports["latitude"].tolist() + distribution_centers["latitude"].tolist()
+    lon_values = ports["longitude"].tolist() + distribution_centers["longitude"].tolist()
+    lat_values = ports["latitude"].tolist() + distribution_centers["latitude"].tolist()
 
     if not route_gdf.empty:
         minx, miny, maxx, maxy = route_gdf.total_bounds
@@ -237,7 +237,7 @@ def filter_mainland_communes(
 
 def plot_routes_on_communes_map(
     communes_shp_path: Path,
-    airports: pd.DataFrame,
+    ports: pd.DataFrame,
     distribution_centers: pd.DataFrame,
     route_gdf: gpd.GeoDataFrame,
     output_image: Path,
@@ -250,7 +250,7 @@ def plot_routes_on_communes_map(
     communes_gdf = communes_gdf.to_crs(epsg=4326)
 
     min_lon, max_lon, min_lat, max_lat = get_dynamic_map_bounds(
-        airports=airports,
+        ports=ports,
         distribution_centers=distribution_centers,
         route_gdf=route_gdf,
         padding_lon=0.20,
@@ -291,12 +291,12 @@ def plot_routes_on_communes_map(
         )
 
     ax.scatter(
-        airports["longitude"],
-        airports["latitude"],
+        ports["longitude"],
+        ports["latitude"],
         s=180,
         marker="^",
         zorder=4,
-        label="Airports",
+        label="Ports",
     )
 
     ax.scatter(
@@ -308,11 +308,11 @@ def plot_routes_on_communes_map(
         label="Distribution Centers",
     )
 
-    for _, row in airports.iterrows():
+    for _, row in ports.iterrows():
         ax.text(
             row["longitude"],
             row["latitude"],
-            row["airport"],
+            row["port"],
             fontsize=9,
             zorder=5,
         )
@@ -329,7 +329,7 @@ def plot_routes_on_communes_map(
     ax.set_xlim(min_lon, max_lon)
     ax.set_ylim(min_lat, max_lat)
     ax.set_aspect("equal", adjustable="box")
-    ax.set_title("openrouteservice truck routes from airports to distribution centers")
+    ax.set_title("openrouteservice truck routes from ports to distribution centers")
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
     ax.legend(loc="best")
@@ -346,30 +346,30 @@ def main():
 
     project_root = Path(__file__).resolve().parents[1]
 
-    airport_csv = project_root / "data" / "SOLVER DATA" / "A.csv"
+    port_csv = project_root / "data" / "SOLVER DATA" / "P.csv"
     cd_csv = project_root / "data" / "SOLVER DATA" / "CD.csv"
     communes_shp = project_root / "data" / "DPA 2024" / "COMUNAS" / "COMUNAS_v1.shp"
 
-    output_csv = project_root / "data" / "SOLVER DATA" / "D_CD_A.csv"
-    output_image = project_root / "graphs" / "distances" / "D_CD_A_ors_routes.png"
+    output_csv = project_root / "data" / "SOLVER DATA" / "D_CD_P.csv"
+    output_image = project_root / "graphs" / "distances" / "D_CD_P_ors_routes.png"
 
-    airports = load_points(airport_csv, "airport")
+    ports = load_points(port_csv, "port")
     distribution_centers = load_points(cd_csv, "cd_name")
 
     print("Computing distance matrix with openrouteservice Matrix API...")
     distance_matrix = call_matrix_api(
-        airports=airports,
+        ports=ports,
         distribution_centers=distribution_centers,
         profile="driving-hgv",
     )
 
     output_csv.parent.mkdir(parents=True, exist_ok=True)
-    distance_matrix.to_csv(output_csv, encoding="utf-8-sig", index_label="airport")
+    distance_matrix.to_csv(output_csv, encoding="utf-8-sig", index_label="port")
     print(f"Distance matrix saved to: {output_csv}")
 
     print("Computing route geometries with openrouteservice Directions API...")
     route_records = compute_all_route_geometries(
-        airports=airports,
+        ports=ports,
         distribution_centers=distribution_centers,
         profile="driving-hgv",
         sleep_seconds=0.2,
@@ -380,7 +380,7 @@ def main():
     print("Plotting routes on communes shapefile...")
     plot_routes_on_communes_map(
         communes_shp_path=communes_shp,
-        airports=airports,
+        ports=ports,
         distribution_centers=distribution_centers,
         route_gdf=route_gdf,
         output_image=output_image,

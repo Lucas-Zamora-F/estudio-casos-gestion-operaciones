@@ -34,31 +34,32 @@ def load_points(csv_path: Path, name_col: str) -> pd.DataFrame:
     return df
 
 
+def is_same_location(
+    lat1: float,
+    lon1: float,
+    lat2: float,
+    lon2: float,
+    tol: float = 1e-5,
+) -> bool:
+    return abs(lat1 - lat2) < tol and abs(lon1 - lon2) < tol
+
+
 def call_matrix_api(
-    airports: pd.DataFrame,
-    distribution_centers: pd.DataFrame,
+    mobile_distribution_centers: pd.DataFrame,
     profile: str = "driving-hgv",
 ) -> pd.DataFrame:
     url = f"{ORS_BASE_URL}/v2/matrix/{profile}"
 
     locations = []
-
-    for _, row in airports.iterrows():
+    for _, row in mobile_distribution_centers.iterrows():
         locations.append([float(row["longitude"]), float(row["latitude"])])
 
-    for _, row in distribution_centers.iterrows():
-        locations.append([float(row["longitude"]), float(row["latitude"])])
-
-    airport_count = len(airports)
-    cd_count = len(distribution_centers)
-
-    sources = list(range(airport_count))
-    destinations = list(range(airport_count, airport_count + cd_count))
+    n_mdcp = len(mobile_distribution_centers)
 
     payload = {
         "locations": locations,
-        "sources": sources,
-        "destinations": destinations,
+        "sources": list(range(n_mdcp)),
+        "destinations": list(range(n_mdcp)),
         "metrics": ["distance"],
         "units": "km",
     }
@@ -81,11 +82,16 @@ def call_matrix_api(
     if "distances" not in data:
         raise RuntimeError(f"Unexpected Matrix API response: {data}")
 
+    names = mobile_distribution_centers["mdcp_name"].tolist()
+
     distance_matrix = pd.DataFrame(
         data["distances"],
-        index=airports["airport"].tolist(),
-        columns=distribution_centers["cd_name"].tolist(),
+        index=names,
+        columns=names,
     )
+
+    for name in names:
+        distance_matrix.loc[name, name] = 0.0
 
     return distance_matrix.round(3)
 
@@ -139,48 +145,100 @@ def call_directions_api(
     return shape(geometry_dict)
 
 
-def compute_all_route_geometries(
-    airports: pd.DataFrame,
-    distribution_centers: pd.DataFrame,
+def call_directions_api_with_retry(
+    origin_lon: float,
+    origin_lat: float,
+    destination_lon: float,
+    destination_lat: float,
     profile: str = "driving-hgv",
-    sleep_seconds: float = 0.2,
+    max_retries: int = 4,
+):
+    for attempt in range(max_retries):
+        try:
+            return call_directions_api(
+                origin_lon=origin_lon,
+                origin_lat=origin_lat,
+                destination_lon=destination_lon,
+                destination_lat=destination_lat,
+                profile=profile,
+            )
+        except Exception as e:
+            error_text = str(e)
+
+            if "429" in error_text or "Rate Limit Exceeded" in error_text:
+                wait_time = 2 * (attempt + 1)
+                print(
+                    f"Rate limit hit for route "
+                    f"({origin_lat}, {origin_lon}) -> ({destination_lat}, {destination_lon}). "
+                    f"Retrying in {wait_time} seconds..."
+                )
+                time.sleep(wait_time)
+                continue
+
+            raise
+
+    print(
+        f"Warning: max retries exceeded for route "
+        f"({origin_lat}, {origin_lon}) -> ({destination_lat}, {destination_lon})"
+    )
+    return None
+
+
+def compute_all_route_geometries(
+    mobile_distribution_centers: pd.DataFrame,
+    profile: str = "driving-hgv",
+    sleep_seconds: float = 1.2,
 ) -> list:
     route_records = []
 
-    for _, airport_row in airports.iterrows():
-        airport_name = airport_row["airport"]
-        origin_lat = airport_row["latitude"]
-        origin_lon = airport_row["longitude"]
+    n_mdcp = len(mobile_distribution_centers)
 
-        for _, cd_row in distribution_centers.iterrows():
-            cd_name = cd_row["cd_name"]
-            destination_lat = cd_row["latitude"]
-            destination_lon = cd_row["longitude"]
+    for i in range(n_mdcp):
+        origin_row = mobile_distribution_centers.iloc[i]
+        origin_name = origin_row["mdcp_name"]
+        origin_lat = float(origin_row["latitude"])
+        origin_lon = float(origin_row["longitude"])
 
-            print(f"Computing route geometry: {airport_name} -> {cd_name}")
+        for j in range(i + 1, n_mdcp):
+            destination_row = mobile_distribution_centers.iloc[j]
+            destination_name = destination_row["mdcp_name"]
+            destination_lat = float(destination_row["latitude"])
+            destination_lon = float(destination_row["longitude"])
+
+            print(f"Computing route geometry: {origin_name} -> {destination_name}")
+
+            if is_same_location(
+                origin_lat,
+                origin_lon,
+                destination_lat,
+                destination_lon,
+            ):
+                print(f"Skipping same-location route: {origin_name} -> {destination_name}")
+                continue
 
             try:
-                geometry = call_directions_api(
+                geometry = call_directions_api_with_retry(
                     origin_lon=origin_lon,
                     origin_lat=origin_lat,
                     destination_lon=destination_lon,
                     destination_lat=destination_lat,
                     profile=profile,
+                    max_retries=4,
                 )
             except Exception as e:
-                print(f"Warning: route failed for {airport_name} -> {cd_name}: {e}")
+                print(f"Warning: route failed for {origin_name} -> {destination_name}: {e}")
                 geometry = None
 
             if geometry is not None:
                 route_records.append(
                     {
-                        "airport": airport_name,
-                        "cd_name": cd_name,
+                        "origin_mdcp": origin_name,
+                        "destination_mdcp": destination_name,
                         "geometry": geometry,
                     }
                 )
             else:
-                print(f"Warning: no route returned for {airport_name} -> {cd_name}")
+                print(f"Warning: no route returned for {origin_name} -> {destination_name}")
 
             time.sleep(sleep_seconds)
 
@@ -190,7 +248,7 @@ def compute_all_route_geometries(
 def build_route_gdf(route_records: list) -> gpd.GeoDataFrame:
     if not route_records:
         return gpd.GeoDataFrame(
-            columns=["airport", "cd_name", "geometry"],
+            columns=["origin_mdcp", "destination_mdcp", "geometry"],
             geometry="geometry",
             crs="EPSG:4326",
         )
@@ -199,14 +257,13 @@ def build_route_gdf(route_records: list) -> gpd.GeoDataFrame:
 
 
 def get_dynamic_map_bounds(
-    airports: pd.DataFrame,
-    distribution_centers: pd.DataFrame,
+    mobile_distribution_centers: pd.DataFrame,
     route_gdf: gpd.GeoDataFrame,
     padding_lon: float = 0.20,
     padding_lat: float = 0.20,
 ):
-    lon_values = airports["longitude"].tolist() + distribution_centers["longitude"].tolist()
-    lat_values = airports["latitude"].tolist() + distribution_centers["latitude"].tolist()
+    lon_values = mobile_distribution_centers["longitude"].tolist()
+    lat_values = mobile_distribution_centers["latitude"].tolist()
 
     if not route_gdf.empty:
         minx, miny, maxx, maxy = route_gdf.total_bounds
@@ -228,17 +285,12 @@ def filter_mainland_communes(
     min_lat: float,
     max_lat: float,
 ) -> gpd.GeoDataFrame:
-    """
-    Keep only communes intersecting the dynamic plot window.
-    This removes Antarctica / oceanic territories from the map.
-    """
     return communes_gdf.cx[min_lon:max_lon, min_lat:max_lat]
 
 
 def plot_routes_on_communes_map(
     communes_shp_path: Path,
-    airports: pd.DataFrame,
-    distribution_centers: pd.DataFrame,
+    mobile_distribution_centers: pd.DataFrame,
     route_gdf: gpd.GeoDataFrame,
     output_image: Path,
 ):
@@ -250,8 +302,7 @@ def plot_routes_on_communes_map(
     communes_gdf = communes_gdf.to_crs(epsg=4326)
 
     min_lon, max_lon, min_lat, max_lat = get_dynamic_map_bounds(
-        airports=airports,
-        distribution_centers=distribution_centers,
+        mobile_distribution_centers=mobile_distribution_centers,
         route_gdf=route_gdf,
         padding_lon=0.20,
         padding_lat=0.20,
@@ -286,50 +337,38 @@ def plot_routes_on_communes_map(
     if not route_gdf.empty:
         route_gdf.plot(
             ax=ax,
-            linewidth=2.2,
+            linewidth=2.4,
+            color="steelblue",
             zorder=3,
+            label="MDCP routes",
         )
 
     ax.scatter(
-        airports["longitude"],
-        airports["latitude"],
-        s=180,
-        marker="^",
+        mobile_distribution_centers["longitude"],
+        mobile_distribution_centers["latitude"],
+        s=150,
+        marker="D",
+        color="red",
+        edgecolors="black",
+        linewidths=0.8,
         zorder=4,
-        label="Airports",
+        label="MDCP",
     )
 
-    ax.scatter(
-        distribution_centers["longitude"],
-        distribution_centers["latitude"],
-        s=100,
-        marker="o",
-        zorder=4,
-        label="Distribution Centers",
-    )
-
-    for _, row in airports.iterrows():
+    for _, row in mobile_distribution_centers.iterrows():
         ax.text(
             row["longitude"],
             row["latitude"],
-            row["airport"],
-            fontsize=9,
-            zorder=5,
-        )
-
-    for _, row in distribution_centers.iterrows():
-        ax.text(
-            row["longitude"],
-            row["latitude"],
-            row["cd_name"],
+            row["mdcp_name"],
             fontsize=8,
+            fontweight="bold",
             zorder=5,
         )
 
     ax.set_xlim(min_lon, max_lon)
     ax.set_ylim(min_lat, max_lat)
     ax.set_aspect("equal", adjustable="box")
-    ax.set_title("openrouteservice truck routes from airports to distribution centers")
+    ax.set_title("openrouteservice routes between MDCP locations")
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
     ax.legend(loc="best")
@@ -346,33 +385,29 @@ def main():
 
     project_root = Path(__file__).resolve().parents[1]
 
-    airport_csv = project_root / "data" / "SOLVER DATA" / "A.csv"
-    cd_csv = project_root / "data" / "SOLVER DATA" / "CD.csv"
+    mdcp_csv = project_root / "data" / "SOLVER DATA" / "MDCP.csv"
     communes_shp = project_root / "data" / "DPA 2024" / "COMUNAS" / "COMUNAS_v1.shp"
 
-    output_csv = project_root / "data" / "SOLVER DATA" / "D_CD_A.csv"
-    output_image = project_root / "graphs" / "distances" / "D_CD_A_ors_routes.png"
+    output_csv = project_root / "data" / "SOLVER DATA" / "D_MDCP.csv"
+    output_image = project_root / "graphs" / "distances" / "D_MDCP_ors_routes.png"
 
-    airports = load_points(airport_csv, "airport")
-    distribution_centers = load_points(cd_csv, "cd_name")
+    mobile_distribution_centers = load_points(mdcp_csv, "mdcp_name")
 
     print("Computing distance matrix with openrouteservice Matrix API...")
     distance_matrix = call_matrix_api(
-        airports=airports,
-        distribution_centers=distribution_centers,
+        mobile_distribution_centers=mobile_distribution_centers,
         profile="driving-hgv",
     )
 
     output_csv.parent.mkdir(parents=True, exist_ok=True)
-    distance_matrix.to_csv(output_csv, encoding="utf-8-sig", index_label="airport")
+    distance_matrix.to_csv(output_csv, encoding="utf-8-sig", index_label="mdcp_name")
     print(f"Distance matrix saved to: {output_csv}")
 
     print("Computing route geometries with openrouteservice Directions API...")
     route_records = compute_all_route_geometries(
-        airports=airports,
-        distribution_centers=distribution_centers,
+        mobile_distribution_centers=mobile_distribution_centers,
         profile="driving-hgv",
-        sleep_seconds=0.2,
+        sleep_seconds=1.2,
     )
 
     route_gdf = build_route_gdf(route_records)
@@ -380,8 +415,7 @@ def main():
     print("Plotting routes on communes shapefile...")
     plot_routes_on_communes_map(
         communes_shp_path=communes_shp,
-        airports=airports,
-        distribution_centers=distribution_centers,
+        mobile_distribution_centers=mobile_distribution_centers,
         route_gdf=route_gdf,
         output_image=output_image,
     )
