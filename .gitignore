@@ -219,3 +219,12 @@ __marimo__/
 
 # Optional
 *.gz
+
+# Datos pesados
+data/DPA 2024/
+data/CENSO/
+
+# Archivos grandes específicos
+*.shp
+*.csv
+*.docx
