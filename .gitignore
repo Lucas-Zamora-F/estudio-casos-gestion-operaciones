@@ -220,11 +220,6 @@ __marimo__/
 # Optional
 *.gz
 
-# Datos pesados
-data/DPA 2024/
+# Ignore large data folders
 data/CENSO/
-
-# Archivos grandes específicos
-*.shp
-*.csv
-*.docx
+data/DPA 2024/
