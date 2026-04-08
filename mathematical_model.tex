@@ -69,20 +69,84 @@
 
 \section{Model Assumptions}
 
+The following assumptions are adopted to simplify the modeling of the Fresh Veggie (FV) logistics network and to ensure tractability of the optimization problem.
+
 \begin{itemize}
-    \item Demand for each product is assumed to be constant across all time periods.
+
+    % =========================
+    % Demand and Customer Behavior
+    % =========================
+    
+    \item Demand for each product is assumed to be deterministic and constant over time.
     
     \item Households are assumed to be homogeneous in terms of consumption rates and ordering behavior.
     
-    \item Each household places exactly one order per week, consistently across all weeks.
+    \item Each household is assumed to place exactly one order per week. This assumption approximates the stochastic ordering behavior described in the problem statement and allows for a tractable aggregate demand representation.
     
-    \item All transportation and replenishment processes are assumed to be instantaneous. Therefore, products purchased from any supplier are assumed to arrive immediately at the corresponding port, airport, or distribution center, and any subsequent transfers within the network are also assumed to occur without delay.
-
-    \item Last-mile delivery distances are approximated using an average distance from each facility type to the households within its coverage area.
+    \item All demand from the households served by the network is assumed to be fully satisfied. Service level constraints are not explicitly modeled.
     
-    \item Households are assumed to be uniformly distributed within the coverage area of each facility.
+    \item Customer behavior is assumed to be stable over time, with no cancellations or variability in ordering patterns.
     
-    \item Delivery routes are not explicitly modeled; instead, transportation costs are approximated using average distances.
+    
+    % =========================
+    % Coverage and Network Structure
+    % =========================
+    
+    \item The coverage associated with each facility configuration $z \in \mathcal{Z}$ is assumed to be known and deterministic. The parameter $p(z)$ represents the number of households covered by configuration $z$ and is precomputed.
+    
+    \item Households are assumed to be uniformly distributed within the service region.
+    
+    \item Each household is assigned to a single facility, and this assignment does not change over time.
+    
+    \item Coverage is not modeled geometrically within the optimization problem. Instead, it is incorporated through precomputed parameters.
+    
+    \item Congestion effects and routing complexities are not explicitly modeled. Transportation distances are approximated using average distances.
+    
+    
+    % =========================
+    % Transportation and Operations
+    % =========================
+    
+    \item All transportation and replenishment processes are assumed to be instantaneous. Lead times do not affect operational decisions and are only indirectly reflected through cost parameters.
+    
+    \item Transportation costs are assumed to be linear with respect to both distance and quantity transported.
+    
+    \item No capacity constraints are imposed on transportation modes (e.g., trucks, ships, or aircraft).
+    
+    \item Products are treated as continuous flows (in kilograms), and indivisibilities are ignored.
+    
+    \item No product losses occur during transportation or handling.
+    
+    
+    % =========================
+    % Supply and Procurement
+    % =========================
+    
+    \item Suppliers are assumed to have unlimited production capacity within their availability periods.
+    
+    \item Purchase prices and selling prices are assumed to be constant over time.
+    
+    \item Products are modeled independently, and no substitution effects between products are considered.
+    
+    \item There are no capacity constraints at ports, airports, or wholesale markets.
+    
+    
+    % =========================
+    % Cost Structure
+    % =========================
+    
+    \item All costs are modeled as linear functions. No economies of scale are considered in purchasing, transportation, or distribution.
+    
+    \item Transportation and delivery costs are approximated using average distances and cost coefficients.
+    
+    
+    % =========================
+    % Simplifications (Scope Limitations)
+    % =========================
+    
+    \item Inventory decisions are not explicitly modeled. All products are assumed to be immediately distributed upon arrival at the facilities.
+    
+    \item Product perishability and shelf-life constraints are not explicitly modeled in this formulation and are considered as part of future extensions of the model.
     
 \end{itemize}
 
@@ -124,6 +188,16 @@
         & \mathrm{Chile\text{-}Maul}, \mathrm{Chile\text{-}Coq} \}
     \end{aligned}
     \]
+
+    \item $S_{cl} \subseteq S$: set of domestic suppliers located in Chile.
+     \[
+    \begin{aligned}
+    S = \{ \mathrm{Chile\text{-}Scl}, \mathrm{Chile\text{-}Vap}, 
+        & \mathrm{Chile\text{-}Maul}, \mathrm{Chile\text{-}Coq} \}
+    \end{aligned}
+    \]
+
+
 
     \item $K$: set of products:
     \[
@@ -182,6 +256,16 @@ All distances are measured in kilometers (km).
     
     \item $P_i = p(i)$: maximum number of households that can be covered by singleton configuration $i \in I$.
     
+\end{itemize}
+
+\subsection{Configuration Parameters}
+
+\begin{itemize}
+    \item $\delta^{CD}_{i,z}$: binary parameter equal to 1 if distribution center $i \in CD$ is active in configuration $z \in \mathcal{Z}$, and 0 otherwise.
+    
+    \item $\delta^{DS}_{j,z}$: binary parameter equal to 1 if dark store $j \in DS$ is active in configuration $z \in \mathcal{Z}$, and 0 otherwise.
+    
+    \item $\delta_{f,z}$: binary parameter equal to 1 if facility $f \in F$ is active in configuration $z \in \mathcal{Z}$, and 0 otherwise.
 \end{itemize}
 
 % =========================================
@@ -257,13 +341,11 @@ All distances are measured in kilometers (km).
 
 \begin{itemize}
 
-    \item $x_z \in \{0,1\}$: equals 1 if facility configuration $z \in \mathcal{Z}$ is selected, and 0 otherwise.
+    \item $x^{config}_z \in \{0,1\}$: equals 1 if facility configuration $z \in \mathcal{Z}$ is selected, and 0 otherwise.
 
-    \item $H_t$: number of households served in week $t \in T$.
+    \item $x^{sup}_{k,s,r,t} \geq 0$: quantity (kg) of product $k \in K$ purchased from supplier $s \in S$ using transportation mode $r \in R$ in period $t \in T$.
     
-    \item $x_{k,s,t} \geq 0$: quantity (kg) of product $k \in K$ purchased from supplier $s \in S$ in period $t \in T$.
-    
-    \item $x_{k,w,t} \geq 0$: quantity (kg) of product $k \in K$ purchased from wholesale market $w \in WM$ in period $t \in T$.
+    \item $x^{WM}_{k,w,t} \geq 0$: quantity (kg) of product $k \in K$ purchased from wholesale market $w \in WM$ in period $t \in T$.
     
     \item $y^{P}_{k,p,i,t} \geq 0$: quantity (kg) of product $k \in K$ transported from port $p \in P$ to distribution center $i \in CD$ in period $t \in T$.
     
@@ -291,7 +373,10 @@ The objective is to maximize total profit over the planning horizon, defined as 
 \[
 \sum_{t \in T} 
 \left[
-    H_t \cdot 
+    \sum_{z \in \mathcal{Z}} 
+    \left(
+        p(z) \cdot x^{config}_z
+    \right) \cdot 
     \left(
         \bar{h} \cdot \sum_{k \in K} q_k \cdot v_k
         + f^{del}
@@ -305,9 +390,9 @@ The objective is to maximize total profit over the planning horizon, defined as 
 \[
 \sum_{t \in T}
 \left[
-    \sum_{k \in K} \sum_{s \in S} c^{buy}_{k,s} \, x_{k,s,t}
+    \sum_{k \in K} \sum_{s \in S} \sum_{r \in R} c^{buy}_{k,s,r} \, x^{sup}_{k,s,r,t}
     +
-    \sum_{k \in K} \sum_{w \in WM} c^{WM}_{k,w} \, x_{k,w,t}
+    \sum_{k \in K} \sum_{w \in WM} c^{WM}_{k,w} \, x^{WM}_{k,w,t}
 \right]
 \]
 
@@ -357,63 +442,165 @@ c^{del}\,\bar{d}_f\,h_{f,t}
 
 \textbf{Mobile Distribution Center Movement Cost:}
 \[
-\sum_{t \in T} \sum_{z \in \mathcal{Z}} c^{mov}\, g(z)\, x_z
+|T| \cdot c^{mov}
+\sum_{z \in \mathcal{Z}} g(z)\, x^{config}_z
 \]
-
-\vspace{0.5cm}
-
-\clearpage
-\begin{landscape}
-
-\vspace{0.5cm}
-
-\resizebox{0.95\linewidth}{!}{$
-\begin{aligned}
-\max \quad 
-& \sum_{t \in T} 
-\left[
-    H_t \left(
-        \bar{h} \sum_{k \in K} q_k v_k + f^{del}
-    \right)
-\right] \\
-& - \sum_{t \in T}
-\left[
-    \sum_{k \in K} \sum_{s \in S} c^{buy}_{k,s} x_{k,s,t}
-    +
-    \sum_{k \in K} \sum_{w \in WM} c^{WM}_{k,w} x_{k,w,t}
-\right] \\
-& - \sum_{t \in T}
-\Bigg[
-    \sum_{k \in K} \sum_{p \in P} \sum_{i \in CD} 
-    c^{tr} d^{CD,P}_{i,p} y^{P}_{k,p,i,t}
-    +
-    \sum_{k \in K} \sum_{a \in A} \sum_{i \in CD} 
-    c^{tr} d^{CD,A}_{i,a} y^{A}_{k,a,i,t} \\
-& \qquad +
-    \sum_{k \in K} \sum_{s \in S_{cl}} \sum_{i \in CD} 
-    c^{tr} d^{S_{cl},CD}_{s,i} y^{S}_{k,s,i,t}
-    +
-    \sum_{k \in K} \sum_{w \in WM} \sum_{i \in CD} 
-    c^{tr} d^{CD,WM}_{i,w} y^{WM}_{k,w,i,t}
-\Bigg] \\
-& - \sum_{t \in T}
-\left[
-    \sum_{k \in K} \sum_{i \in CD} \sum_{j \in DS}
-    c^{tr} d^{CD,DS}_{i,j} y^{CD,DS}_{k,i,j,t}
-\right] \\
-& - \sum_{t \in T} \sum_{f \in F}
-c^{del}\,\bar{d}_f\,h_{f,t}
-\left(\bar{h}\sum_{k \in K} q_k\right) \\
-& - \sum_{t \in T} \sum_{z \in \mathcal{Z}} 
-c^{mov}\, g(z)\, x_z
-\end{aligned}
-$}
-
-\end{landscape}
-\clearpage
 
 \newpage
 \section{Constraints}
+
+This section presents the core constraints required to ensure consistency between the selected facility configuration, the use of the logistics network, and the households served in each period.
+
+\subsection{Configuration Selection}
+
+The model must select exactly one facility configuration from the set of feasible configurations.
+
+\[
+\sum_{z \in \mathcal{Z}} x^{config}_z = 1
+\qquad \forall
+\]
+
+This constraint ensures that the network design is uniquely defined by a single configuration \(z \in \mathcal{Z}\).
+
+\vspace{0.4cm}
+
+\subsection{Activation of Distribution Centers for Inbound Flows}
+
+A distribution center can receive inbound product flows only if it is active in the selected configuration.
+
+\[
+\sum_{k \in K}
+\left(
+\sum_{p \in P} y^{P}_{k,p,i,t}
++
+\sum_{a \in A} y^{A}_{k,a,i,t}
++
+\sum_{s \in S_{cl}} y^{S}_{k,s,i,t}
++
+\sum_{w \in WM} y^{WM}_{k,w,i,t}
+\right)
+\le
+M^{CD,in}_{i,t}
+\sum_{z \in \mathcal{Z}} \delta^{CD}_{i,z}\,x^{config}_z
+\qquad \forall i \in CD,\; t \in T
+\]
+
+This constraint prevents products from entering a distribution center that is not part of the chosen network configuration.
+
+\vspace{0.4cm}
+
+\subsection{Activation of Distribution Centers for Outbound Flows to Dark Stores}
+
+A distribution center can send products to dark stores only if it is active in the selected configuration.
+
+\[
+\sum_{k \in K}\sum_{j \in DS} y^{CD,DS}_{k,i,j,t}
+\le
+M^{CD,out}_{i,t}
+\sum_{z \in \mathcal{Z}} \delta^{CD}_{i,z}\,x^{config}_z
+\qquad \forall i \in CD,\; t \in T
+\]
+
+This ensures that outbound inter-facility flows can only originate from active distribution centers.
+
+\vspace{0.4cm}
+
+\subsection{Activation of Dark Stores for Inbound Flows}
+
+A dark store can receive products from distribution centers only if it is active in the selected configuration.
+
+\[
+\sum_{k \in K}\sum_{i \in CD} y^{CD,DS}_{k,i,j,t}
+\le
+M^{DS}_{j,t}
+\sum_{z \in \mathcal{Z}} \delta^{DS}_{j,z}\,x^{config}_z
+\qquad \forall j \in DS,\; t \in T
+\]
+
+This constraint guarantees that dark stores not selected in the chosen configuration cannot be used as logistics nodes.
+
+\vspace{0.4cm}
+
+\subsection{Activation of Customer Service by Facility}
+
+A facility can serve households only if it is active in the selected configuration.
+
+\[
+h_{f,t}
+\le
+M^{H}_{f,t}
+\sum_{z \in \mathcal{Z}} \delta_{f,z}\,x^{config}_z
+\qquad \forall f \in F,\; t \in T
+\]
+
+This condition links customer service decisions to the selected network structure.
+
+\vspace{0.4cm}
+
+\subsection{Consistency Between Covered Households and Households Served}
+
+The total number of households served in each period must match the number of households covered by the selected configuration.
+
+\[
+\sum_{f \in F} h_{f,t}
+=
+\sum_{z \in \mathcal{Z}} p(z)\,x^{config}_z
+\qquad \forall t \in T
+\]
+
+This constraint ensures consistency between the strategic coverage decision and the operational allocation of households across facilities.
+
+\vspace{0.4cm}
+
+\subsection{Non-Negativity and Binary Restrictions}
+
+The facility configuration variable is binary, while all flow and service variables are non-negative.
+
+\[
+x^{config}_z \in \{0,1\}
+\qquad \forall z \in \mathcal{Z}
+\]
+
+\[
+x^{sup}_{k,s,r,t} \geq 0
+\qquad \forall k \in K,\; s \in S,\; r \in R,\; t \in T
+\]
+
+\[
+x^{WM}_{k,w,t} \geq 0
+\qquad \forall k \in K,\; w \in WM,\; t \in T
+\]
+
+\[
+y^{P}_{k,p,i,t} \geq 0
+\qquad \forall k \in K,\; p \in P,\; i \in CD,\; t \in T
+\]
+
+\[
+y^{A}_{k,a,i,t} \geq 0
+\qquad \forall k \in K,\; a \in A,\; i \in CD,\; t \in T
+\]
+
+\[
+y^{S}_{k,s,i,t} \geq 0
+\qquad \forall k \in K,\; s \in S_{cl},\; i \in CD,\; t \in T
+\]
+
+\[
+y^{WM}_{k,w,i,t} \geq 0
+\qquad \forall k \in K,\; w \in WM,\; i \in CD,\; t \in T
+\]
+
+\[
+y^{CD,DS}_{k,i,j,t} \geq 0
+\qquad \forall k \in K,\; i \in CD,\; j \in DS,\; t \in T
+\]
+
+\[
+h_{f,t} \geq 0
+\qquad \forall f \in F,\; t \in T
+\]
+
 \newpage
 
 \section{Extensions and Special Considerations}
