@@ -1,10 +1,11 @@
 import sqlite3
+import random
+from pathlib import Path
+
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import random
 
-from pathlib import Path
 from shapely.geometry import Point
 from shapely.ops import unary_union
 from tqdm import tqdm
@@ -33,31 +34,42 @@ SEED = 42
 # HELPERS
 # =============================
 
-def create_buffer(lon, lat, r):
+def create_buffer(lon: float, lat: float, radius_m: float):
     point = gpd.GeoSeries([Point(lon, lat)], crs="EPSG:4326").to_crs(epsg=32719)
-    return point.iloc[0].buffer(r)
+    return point.iloc[0].buffer(radius_m)
+
+
+def project_point_xy(lon: float, lat: float):
+    point = gpd.GeoSeries([Point(lon, lat)], crs="EPSG:4326").to_crs(epsg=32719)
+    geom = point.iloc[0]
+    return geom.x, geom.y
+
 
 def prepare_geography():
     gdf = gpd.read_file(SHAPE_PATH)
 
     gdf["CUT_REG"] = gdf["CUT_REG"].astype(str).str.zfill(2)
+    gdf["CUT_COM"] = gdf["CUT_COM"].astype(str).str.zfill(5)
     gdf = gdf[gdf["CUT_REG"] == "13"].copy()
 
     df = pd.read_csv(CENSUS_PATH, sep=";", low_memory=False)
     df["COD_REGION"] = pd.to_numeric(df["COD_REGION"], errors="coerce")
-    df = df[df["COD_REGION"] == 13]
-
+    df = df[df["COD_REGION"] == 13].copy()
     df["CUT"] = df["CUT"].astype(str).str.zfill(5)
 
-    df_com = df.groupby("CUT", as_index=False)["n_per"].sum()
-    df_com = df_com.rename(columns={"n_per": "POP"})
+    df_com = (
+        df.groupby("CUT", as_index=False)["n_per"]
+        .sum()
+        .rename(columns={"n_per": "POP"})
+    )
 
     gdf = gdf.merge(df_com, left_on="CUT_COM", right_on="CUT", how="left")
-    gdf["POP"] = gdf["POP"].fillna(0)
+    gdf["POP"] = gdf["POP"].fillna(0.0)
 
     return gdf.to_crs(epsg=32719)
 
-def covered_population(gdf, geom):
+
+def covered_population(gdf: gpd.GeoDataFrame, geom) -> float:
     if geom is None or geom.is_empty:
         return 0.0
 
@@ -66,57 +78,75 @@ def covered_population(gdf, geom):
     temp["INTER"] = temp.geometry.intersection(geom)
     temp["A_INT"] = temp["INTER"].area
 
-    temp["FRAC"] = 0
-    mask = temp["AREA"] > 0
-    temp.loc[mask, "FRAC"] = temp["A_INT"] / temp["AREA"]
+    # Important fix: float column
+    temp["FRAC"] = temp["A_INT"] / temp["AREA"]
+    temp["FRAC"] = temp["FRAC"].fillna(0.0)
 
     temp["POP_COV"] = temp["POP"] * temp["FRAC"]
-
     return float(temp["POP_COV"].sum())
+
+
+def ensure_covered_population_column(conn: sqlite3.Connection):
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(z)")
+    cols = [row[1] for row in cursor.fetchall()]
+
+    if "covered_population" not in cols:
+        cursor.execute("ALTER TABLE z ADD COLUMN covered_population REAL")
+        conn.commit()
+
 
 # =============================
 # MAIN
 # =============================
 
 def main():
-
     random.seed(SEED)
 
     # ---- load facilities ----
-    conn = sqlite3.connect(F_DB)
-    f_df = pd.read_sql("SELECT * FROM facilities", conn)
-    conn.close()
+    conn_f = sqlite3.connect(F_DB)
+    f_df = pd.read_sql("SELECT * FROM facilities", conn_f)
+    conn_f.close()
 
+    # Precompute buffers and projected XY for plotting
     buffers = {}
+    projected_xy = {}
 
     for _, row in f_df.iterrows():
-        if row["type"] == "CD":
-            r = CD_RADIUS
-        elif row["type"] == "DS":
-            r = DS_RADIUS
-        else:
-            r = MDCP_RADIUS
+        facility_name = row["facility_name"]
+        lon = float(row["longitude"])
+        lat = float(row["latitude"])
 
-        buffers[row["facility_name"]] = create_buffer(
-            row["longitude"], row["latitude"], r
-        )
+        if row["type"] == "CD":
+            radius = CD_RADIUS
+        elif row["type"] == "DS":
+            radius = DS_RADIUS
+        else:
+            radius = MDCP_RADIUS
+
+        buffers[facility_name] = create_buffer(lon, lat, radius)
+        projected_xy[facility_name] = project_point_xy(lon, lat)
 
     # ---- load geography ----
     gdf = prepare_geography()
 
     # ---- open Z.db ----
-    conn = sqlite3.connect(Z_DB)
-    z_df = pd.read_sql("SELECT * FROM z", conn)
+    conn_z = sqlite3.connect(Z_DB)
+    ensure_covered_population_column(conn_z)
 
-    facility_cols = [c for c in z_df.columns if c != "z_name"]
+    z_df = pd.read_sql("SELECT * FROM z", conn_z)
+
+    facility_cols = [
+        c for c in z_df.columns
+        if c not in ("z_name", "covered_population")
+    ]
 
     populations = []
 
     print("Calculating p(z)...")
 
     for _, row in tqdm(z_df.iterrows(), total=len(z_df)):
-
-        active = [c for c in facility_cols if row[c] == 1]
+        active = [c for c in facility_cols if int(row[c]) == 1]
 
         if not active:
             pop = 0.0
@@ -126,25 +156,25 @@ def main():
 
         populations.append(pop)
 
-    # ---- update DB ----
+    # ---- update dataframe ----
     z_df["covered_population"] = populations
 
-    z_df.to_sql("z", conn, if_exists="replace", index=False)
-    conn.close()
+    # ---- write back to DB ----
+    z_df.to_sql("z", conn_z, if_exists="replace", index=False)
+    conn_z.close()
 
     print("Z.db updated with covered_population")
 
     # =============================
     # HISTOGRAM
     # =============================
-
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(10, 6))
     plt.hist(populations, bins=50)
     plt.title("Distribution of Covered Population")
     plt.xlabel("Covered Population")
     plt.ylabel("Frequency")
-
-    plt.savefig(GRAPH_DIR / "coverage_histogram.png")
+    plt.tight_layout()
+    plt.savefig(GRAPH_DIR / "coverage_histogram.png", dpi=300)
     plt.close()
 
     print("Histogram saved")
@@ -152,35 +182,48 @@ def main():
     # =============================
     # RANDOM MAPS
     # =============================
-
-    sample = z_df.sample(N_RANDOM_PLOTS)
+    sample_size = min(N_RANDOM_PLOTS, len(z_df))
+    sample = z_df.sample(sample_size, random_state=SEED)
 
     for _, row in sample.iterrows():
-
-        active = [c for c in facility_cols if row[c] == 1]
+        active = [c for c in facility_cols if int(row[c]) == 1]
 
         if not active:
             continue
 
-        geom = unary_union([buffers[a] for a in active])
+        fig, ax = plt.subplots(figsize=(10, 10))
 
-        fig, ax = plt.subplots(figsize=(8,8))
-
-        gdf.plot(column="POP", ax=ax, legend=True)
-
-        for a in active:
-            gpd.GeoSeries([buffers[a]]).plot(ax=ax, alpha=0.3)
-
-        for a in active:
-            r = f_df[f_df["facility_name"] == a].iloc[0]
-            ax.scatter(r["longitude"], r["latitude"], color="black")
-            ax.text(r["longitude"], r["latitude"], a, fontsize=8)
-
-        ax.set_title(
-            f"{row['z_name']} | Active: {len(active)} | Pop: {int(row['covered_population'])}"
+        # Base geography
+        gdf.plot(
+            column="POP",
+            ax=ax,
+            legend=True,
+            cmap="viridis",
+            linewidth=0.4,
+            edgecolor="black"
         )
 
-        plt.savefig(GRAPH_DIR / f"{row['z_name']}.png")
+        # Coverage buffers
+        for facility in active:
+            gpd.GeoSeries([buffers[facility]], crs="EPSG:32719").plot(
+                ax=ax,
+                alpha=0.30
+            )
+
+        # Facility points and labels
+        for facility in active:
+            x, y = projected_xy[facility]
+            ax.scatter(x, y, color="black", s=18, zorder=5)
+            ax.text(x, y, facility, fontsize=8, zorder=6)
+
+        ax.set_title(
+            f"{row['z_name']} | Active: {len(active)} | "
+            f"Pop: {int(row['covered_population']):,}"
+        )
+
+        ax.set_axis_off()
+        plt.tight_layout()
+        plt.savefig(GRAPH_DIR / f"{row['z_name']}.png", dpi=300)
         plt.close()
 
     print("Random maps saved")
