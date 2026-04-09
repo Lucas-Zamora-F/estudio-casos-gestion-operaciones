@@ -19,8 +19,8 @@ Z_DB = Path("Sets/Z.db")
 GRAPH_DIR = Path("Graphs/Coverage")
 GRAPH_DIR.mkdir(parents=True, exist_ok=True)
 
-SHAPE_PATH = Path("data/DPA 2024/COMUNAS/COMUNAS_v1.shp")
-CENSUS_PATH = Path("data/CENSO/Base_manzana_entidad_CPV24.csv")
+SHAPE_PATH = Path("extern data/DPA 2024/COMUNAS/COMUNAS_v1.shp")
+CENSUS_PATH = Path("extern data/CENSO/Base_manzana_entidad_CPV24.csv")
 
 CD_RADIUS = 15000
 DS_RADIUS = 5000
