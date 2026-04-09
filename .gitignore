@@ -221,5 +221,5 @@ __marimo__/
 *.gz
 
 # Ignore large data folders
-data/CENSO/
-data/DPA 2024/
+extern data/DPA 2024/
+extern data/CENSO/
