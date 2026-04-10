@@ -17,7 +17,7 @@ from shapely.ops import unary_union
 # =============================
 # USER INPUT (HARDCODED)
 # =============================
-Z_INDEX = 65536  # <<< cambias solo esto
+Z_INDEX = 65537  # <<< cambias solo esto
 Z_NAME = f"z_{Z_INDEX:06d}"  
 
 # =============================
