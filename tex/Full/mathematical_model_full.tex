@@ -1,0 +1,1326 @@
+\documentclass[12pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{rotating}
+\usepackage{pdflscape}
+
+
+\geometry{a4paper, margin=2.5cm}
+
+\begin{document}
+
+\begin{titlepage}
+
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{../../source/4f7fe812-7dfc-453d-92a3-e04b74be52a8.jpeg}
+    \end{center}
+
+    \vspace{4cm}
+
+    \begin{center}
+        {\large Case Studies in Operations Management}\\[0.5cm]
+        {\LARGE \textbf{Mathematical Model}}\\[0.3cm]
+        {\Large Business and Logistics Plan for ``Fresh Veggie'' (FV)}
+    \end{center}
+
+    \vfill
+
+    \begin{flushright}
+        \textbf{Authors:}\\
+        Alexander Jesus Balazs Sabag\\
+        Lucas Felipe Camino Alcalde\\
+        Juan Eduardo Escalona Pardo\\
+        Vicente Velasquez Aime\\
+        Lucas Zamora Fochesato\\[0.8cm]
+
+        \textbf{Instructor:}\\
+        Rosa Guadalupe Gonzalez Ramirez\\[0.8cm]
+
+        \textbf{Date:}\\
+        \today
+    \end{flushright}
+
+\end{titlepage}
+
+\section{Model Assumptions}
+
+The mathematical model is developed under the following assumptions:
+
+\begin{itemize}
+    \item Demand is derived from per-capita consumption and aggregated at the household level. The average number of people per household is assumed to be $\eta = 2.8$.
+
+    \item The service region corresponds to the Metropolitan Region of Santiago, and only households located within the coverage area of the selected facility configuration $z \in \mathcal{Z}$ can be served.
+
+    \item The number of households covered by a given facility configuration is denoted by $p(z)$.
+
+    \item Only one facility configuration is selected from the feasible set $\mathcal{Z}$.
+
+    \item Facilities can operate only if they belong to the selected configuration.
+
+    \item The company serves at most 20\% of the total demand within the covered households.
+
+    \item Customer order arrivals are assumed to follow a Poisson process, although the main optimization model is deterministic and based on expected demand.
+
+    \item Demand is expressed in kilograms per product and per time period, and is assumed to be constant over time at the aggregate level.
+
+    \item Unmet demand is not backordered and is therefore considered lost sales.
+
+    \item Imported products enter Chile through international entry points (ports or airport), and their purchasing cost is assumed to be given on a CIF basis, meaning that all costs up to the entry point are included.
+
+    \item Wholesale markets are assumed to offer all products year-round with unlimited availability.
+
+    \item Domestic and imported sourcing availability is subject to seasonality, modeled through monthly availability parameters.
+
+    \item All sourced products are first assigned to distribution centers before being dispatched to downstream facilities or customers.
+
+    \item Dark stores and mobile distribution centers are replenished from distribution centers.
+
+    \item Customer deliveries are fulfilled only from active facilities in the selected network.
+
+    \item All products require a packing time of one day after harvest before transportation begins.
+
+    \item Transportation times are stochastic in reality; however, the optimization model considers expected (average) travel times.
+
+    \item The model is deterministic and based on expected values for demand, travel times, and replenishment flows.
+
+    \item Products are perishable and their remaining shelf life decreases as time elapses after harvest.
+
+    \item No product can be delivered to customers with less than 35\% of its remaining shelf life.
+
+    \item Inventory holding is allowed at facilities, and inventory costs are incurred per kilogram stored per period.
+
+    \item Initial inventory levels at facilities are assumed to be known and given.
+
+    \item Facility storage capacities are finite and known.
+
+    \item Variable operating costs at distribution centers depend on the quantity of product handled during each period.
+
+    \item Inventory holding costs are assumed to correspond to a 15\% annual rate.
+
+    \item Distribution centers (DC), dark stores (DS), and mobile distribution centers (MDCP) are candidate facilities that may be selected as part of the network design.
+
+    \item Mobile distribution centers operate as high-capacity vehicles that depart from a distribution center, visit multiple parking locations, and return to the same distribution center for replenishment.
+
+    \item The load transported by a mobile distribution center in each tour is limited by its maximum capacity.
+
+    \item Transportation can be performed either using owned fleet or outsourced services.
+
+    \item Different products can be transported together in the same vehicle without compatibility restrictions.
+
+    \item Customer orders must be delivered within a maximum time window of 20 hours after being placed.
+
+    \item Procurement, transportation, storage, and delivery decisions are synchronized within daily planning periods.
+
+    \item The model considers daily time periods over a one-year planning horizon.
+
+    \item Investment costs for owned transportation assets are amortized over a 5-year horizon.
+\end{itemize}
+\newpage
+
+\section{Sets}
+\begin{itemize}
+    \item $DC$: set of candidate distribution centers.
+    
+    \item $DS$: set of candidate dark stores.
+    
+    \item $MDCP$: set of candidate parking locations for mobile distribution centers.
+    
+    \item $F = DC \cup DS \cup MDCP$: set of all candidate facilities in the network.
+    
+    \item $P$: set of ports:
+    \[
+    P = \{\text{San Antonio}, \text{Valparaíso}\}
+    \]
+    
+    \item $A$: set of airports:
+    \[
+    A = \{\text{Arturo Merino Benítez International Airport}\}
+    \]
+
+    \item $E = P \cup A$: set of international entry points to Chile.
+    
+    \item $WM$: set of wholesale markets:
+    \[
+    WM = \{\text{La Vega Central}, \text{Lo Valledor}\}
+    \]
+    
+    \item $S^{imp}$: set of imported supplier countries:
+    \[
+    S^{imp} = \{\mathrm{US}, \mathrm{Mexico}, \mathrm{Peru}, \mathrm{Ecuador}, \mathrm{Bolivia}, \mathrm{Argentina}, \mathrm{Spain}\}
+    \]
+
+    \item $S^{cl}$: set of domestic supplier regions in Chile:
+    \[
+    S^{cl} = \{\mathrm{Chile\text{-}Scl}, \mathrm{Chile\text{-}Vap}, \mathrm{Chile\text{-}Maul}, \mathrm{Chile\text{-}Coq}\}
+    \]
+
+    \item $S = S^{imp} \cup S^{cl}$: set of all supplier origins, where
+    \[
+    S^{imp} \cap S^{cl} = \varnothing
+    \]
+
+    \item $K$: set of products:
+    \[
+    K = \{\text{Roma Tomatoes}, \text{Cauliflower}, \text{Broccoli}, \text{Asparagus}, \text{Green Bell Pepper}\}
+    \]
+    
+    \item $\mathcal{Z}$: set of all feasible facility configurations, where each $z \in \mathcal{Z}$ is a binary vector in $\{0,1\}^{|F|}$, excluding the null configuration.
+
+    \item $L$: set of transportation service modes:
+    \[
+    L = \{\text{own}, \text{outsourced}\}
+    \]
+
+    \item $V$: set of owned vehicle types:
+    \[
+    V = \{\text{high-capacity truck}, \text{delivery vehicle}\}
+    \]
+
+    \item $T$: set of time periods representing days within the planning horizon.
+    \[
+    T = \{1,2,\dots,365\}
+    \]
+
+    \item $M$: set of months in the year.
+    \[
+    M = \{1,2,\dots,12\}
+    \]
+
+\end{itemize}
+\newpage
+
+\section{Parameters}
+
+\subsubsection{Time Mapping Parameters}
+\begin{itemize}
+    \item $\delta_{t,m}$: parameter equal to 1 if day $t \in T$ belongs to month $m \in M$, and 0 otherwise.
+\end{itemize}
+
+\subsection{Network Design Parameters}
+
+\begin{itemize}
+    \item $b_{f,z}$: binary parameter equal to 1 if facility $f \in F$ belongs to facility configuration $z \in \mathcal{Z}$, and 0 otherwise.
+\end{itemize}
+
+\subsection{Demand and Market Parameters}
+
+\subsubsection{Deterministic Demand and Market Parameters}
+\begin{itemize}
+    \item $c_k$: per-capita demand of product $k \in K$, expressed in kg per person per planning period.
+
+    \item $\eta$: average number of people per household, where $\eta = 2.8$.
+
+    \item $d^{hh}_k$: average household demand of product $k \in K$, expressed in kg per household per planning period, where
+    \[
+    d^{hh}_k = \eta \, c_k
+    \]
+
+    \item $p(z)$: number of households covered by facility configuration $z \in \mathcal{Z}$.
+
+    \item $\alpha^{\max}$: maximum market capture fraction, where $\alpha^{\max} = 0.20$.
+
+    \item $D^{\max}_{k,z}$: maximum demand of product $k \in K$ that can be served under configuration $z \in \mathcal{Z}$, expressed in kg per planning period, where
+    \[
+    D^{\max}_{k,z} = \alpha^{\max} \, p(z)\, d^{hh}_k
+    \]
+
+    \item $D^{pot}_{k,z}$: potential demand of product $k \in K$ under configuration $z \in \mathcal{Z}$, expressed in kg per planning period.
+\end{itemize}
+
+\subsubsection{Stochastic Order-Arrival Parameters}
+\begin{itemize}
+    \item $\lambda_z$: expected customer order-arrival rate under facility configuration $z \in \mathcal{Z}$ per planning period.
+
+    \item $N_z$: random variable representing the number of customer orders arriving under configuration $z \in \mathcal{Z}$ in a planning period.
+\end{itemize}
+
+Customer order arrivals under configuration $z \in \mathcal{Z}$ are assumed to follow a Poisson distribution:
+
+\[
+N_z \sim \text{Poisson}(\lambda_z)
+\]
+
+\subsection{Service Level Parameters}
+\begin{itemize}
+    \item $\beta$: minimum required fill rate, where $\beta = 0.95$.
+\end{itemize}
+
+\subsection{Revenue Parameters}
+\begin{itemize}
+    \item $P_k$: selling price per kilogram of product $k \in K$, expressed in \$/kg.
+
+    \item $F^{del}$: flat delivery fee charged per customer order, expressed in \$ per order, where $F^{del} = 2.5$.
+\end{itemize}
+
+\subsection{Sourcing Parameters}
+
+\begin{itemize}
+    \item $a_{k,s,m}$: availability parameter equal to 1 if product $k \in K$ is available from supplier $s \in S$ during month $m \in M$, and 0 otherwise.
+
+    \item $\tau^{pack}_k$: packing time required after harvest for product $k \in K$, expressed in days, where $\tau^{pack}_k = 1$.
+\end{itemize}
+
+\subsection{Distance Parameters}
+
+\begin{itemize}
+    \item $D^{DC,DS}_{i,j}$: distance between distribution center $i \in DC$ and dark store $j \in DS$, expressed in km.
+
+    \item $D^{DC,MDCP}_{i,m}$: distance between distribution center $i \in DC$ and mobile distribution center parking location $m \in MDCP$, expressed in km.
+
+    \item $D^{E,DC}_{e,i}$: distance between international entry point $e \in E$ and distribution center $i \in DC$, expressed in km.
+
+    \item $D^{S^{cl},DC}_{s,i}$: distance between domestic supplier $s \in S^{cl}$ and distribution center $i \in DC$, expressed in km.
+
+    \item $D^{MDCP,MDCP}_{m,n}$: distance between mobile distribution center parking locations $m \in MDCP$ and $n \in MDCP$, expressed in km.
+    
+    \item $D^{WM,DC}_{w,i}$: distance between wholesale market $w \in WM$ and distribution center $i \in DC$, expressed in km.
+\end{itemize}
+
+\subsection{Time Parameters}
+
+\begin{itemize}
+    \item $T^{DC,DS}_{i,j}$: travel time between distribution center $i \in DC$ and dark store $j \in DS$, expressed in hours.
+
+    \item $T^{DC,MDCP}_{i,m}$: travel time between distribution center $i \in DC$ and mobile distribution center parking location $m \in MDCP$, expressed in hours.
+
+    \item $T^{E,DC}_{e,i}$: travel time between international entry point $e \in E$ and distribution center $i \in DC$, expressed in hours.
+    
+    \item $T^{S^{cl},DC}_{s,i}$: travel time between domestic supplier $s \in S^{cl}$ and distribution center $i \in DC$, expressed in hours.
+
+    \item $T^{MDCP,MDCP}_{m,n}$: travel time between mobile distribution center parking locations $m \in MDCP$ and $n \in MDCP$, expressed in hours.
+    
+    \item $T^{S^{imp},E}_{s,e}$: travel time between imported supplier $s \in S^{imp}$ and international entry point $e \in E$, expressed in hours.
+
+    \item $T^{WM,DC}_{w,i}$: travel time between wholesale market $w \in WM$ and distribution center $i \in DC$, expressed in hours.
+    
+\end{itemize}
+
+\subsection{Capacity Parameters}
+
+\subsubsection{Facility Capacity Parameters}
+\begin{itemize}
+    \item $Q_v$: load capacity of owned vehicle type $v \in V$, expressed in kg per trip.
+
+    \item $Cap_f$: maximum inventory capacity of facility $f \in F$, expressed in kg.
+
+    \item $I^0_{k,f}$: initial inventory of product $k \in K$ at facility $f \in F$, expressed in kg.
+\end{itemize}
+
+\subsubsection{Transportation Capacity Parameters}
+\begin{itemize}
+    \item $Q_v$: load capacity of owned vehicle type $v \in V$, expressed in kg per trip.
+
+    \item $N_v$: maximum number of trips that a vehicle of type $v \in V$ can perform per period.
+\end{itemize}
+
+\subsubsection{Mobile Distribution Center Capacity Parameters}
+\begin{itemize}
+    \item $Q^{mdc}$: maximum load capacity of the mobile distribution center per tour, expressed in kg.
+
+    \item $N^{tour}_{mdc}$: maximum number of tours that a mobile distribution center can perform per planning period.
+     
+\end{itemize}
+
+\subsection{Stochastic Transportation Parameters}
+
+\begin{itemize}
+    \item $\sigma^{S^{imp},E}_{s,e}$: standard deviation of the travel time between imported supplier $s \in S^{imp}$ and international entry point $e \in E$, expressed in hours.
+
+    \item $\sigma^{E,DC}_{e,i}$: standard deviation of the travel time between international entry point $e \in E$ and distribution center $i \in DC$, expressed in hours.
+
+    \item $\sigma^{S^{cl},DC}_{s,i}$: standard deviation of the travel time between domestic supplier $s \in S^{cl}$ and distribution center $i \in DC$, expressed in hours.
+
+    \item $\sigma^{WM,DC}_{w,i}$: standard deviation of the travel time between wholesale market $w \in WM$ and distribution center $i \in DC$, expressed in hours.
+
+    \item $\sigma^{DC,DS}_{i,j}$: standard deviation of the travel time between distribution center $i \in DC$ and dark store $j \in DS$, expressed in hours.
+
+    \item $\sigma^{DC,MDCP}_{i,m}$: standard deviation of the travel time between distribution center $i \in DC$ and mobile distribution center parking location $m \in MDCP$, expressed in hours.
+
+    \item $\sigma^{MDCP,MDCP}_{m,n}$: standard deviation of the travel time between mobile distribution center parking locations $m,n \in MDCP$, expressed in hours.
+\end{itemize}
+
+\subsection{Perishability Parameters}
+
+\begin{itemize}
+    \item $T_k$: maximum shelf life of product $k \in K$, expressed in days.
+
+    \item $k2_k$: decay parameter of product $k \in K$ governing shelf-life deterioration.
+
+    \item $\theta$: minimum required remaining shelf life fraction for products delivered to customers, where $\theta = 0.35$.
+\end{itemize}
+
+The decay of product $k \in K$ over time is modeled as:
+
+\[
+\text{Decay}_k(t) = \frac{k2_k}{T_k} \left(1 - e^{- \frac{k2_k}{T_k} t} \right)
+\]
+
+The remaining shelf life fraction of product $k \in K$ after $t$ days since harvest is given by:
+
+\[
+R_k(t) = T_k \left(1 - \sum_{\tau=0}^{t} \text{Decay}_k(\tau) \right)
+\]
+
+\subsection{Cost Parameters}
+
+\subsubsection{Sourcing Costs}
+\begin{itemize}
+    \item $C^{pur,imp}_{k,s,e}$: purchasing cost per kilogram of product $k \in K$ acquired from imported supplier $s \in S^{imp}$ through international entry point $e \in E$, expressed in \$/kg.
+
+    \item $C^{pur,cl}_{k,s}$: purchasing cost per kilogram of product $k \in K$ acquired from domestic supplier $s \in S^{cl}$, expressed in \$/kg.
+
+    \item $C^{pur,wm}_{k,w}$: purchasing cost per kilogram of product $k \in K$ acquired from wholesale market $w \in WM$, expressed in \$/kg.
+\end{itemize}
+
+\subsubsection{Facility Costs}
+\begin{itemize}
+    \item $C^{open}_f$: fixed one-time installation cost of facility $f \in F$, expressed in \$.
+
+    \item $C^{op,fix}_f$: fixed operating cost of facility $f \in F$ per planning period, expressed in \$.
+    
+    \item $C^{op,var}_f$: variable operating cost per kilogram processed at facility $f \in F$, expressed in \$/kg.
+\end{itemize}
+
+\subsubsection{Inventory Costs}
+\begin{itemize}
+    \item $C^{inv}_{k,f}$: inventory holding cost per kilogram of product $k \in K$ held at facility $f \in F$ per planning period, expressed in \$/kg.
+\end{itemize}
+
+\subsubsection{Transportation Costs}
+\begin{itemize}
+    \item $C^{tr}_{l}$: transportation cost per kilogram per kilometer using transportation mode $l \in L$, expressed in \$/ (kg·km).
+
+    \item $C^{lm}_{l}$: last-mile transportation cost per kilogram using transportation mode $l \in L$, expressed in \$/kg.
+\end{itemize}
+
+\subsubsection{Fleet Investment Costs}
+\begin{itemize}
+    \item $C^{acq,tr}_{v}$: acquisition cost of owned regular transportation vehicle type $v \in V^{tr}$, expressed in \$.
+
+    \item $C^{acq,lm}_{v}$: acquisition cost of owned last-mile transportation vehicle type $v \in V^{lm}$, expressed in \$.
+\end{itemize}
+
+\subsubsection{Mobile Distribution Center Costs}
+\begin{itemize}
+    \item $C^{acq,mdc}$: acquisition cost of a mobile distribution center, expressed in \$.
+
+    \item $C^{op,mdc}$: operating cost of a mobile distribution center per planning period, expressed in \$.
+
+    \item $C^{mov}$: relocation cost per kilometer of a mobile distribution center, expressed in \$/km.
+\end{itemize}
+
+\subsection{Inventory Policy Parameters}
+
+\begin{itemize}
+    \item $SS_{k,f}$: required safety stock level of product $k \in K$ at facility $f \in F$, expressed in kg.
+
+    \item $\tau^{imp}_{s,e,i}$: total inbound lead time for imported product flow from supplier $s \in S^{imp}$ through entry point $e \in E$ to distribution center $i \in DC$, expressed in days.
+
+    \item $\tau^{cl}_{s,i}$: total inbound lead time for domestic product flow from supplier $s \in S^{cl}$ to distribution center $i \in DC$, expressed in days.
+
+    \item $\tau^{wm}_{w,i}$: total inbound lead time for product flow from wholesale market $w \in WM$ to distribution center $i \in DC$, expressed in days.
+\end{itemize}
+
+\subsubsection{Waste Disposal Costs}
+\begin{itemize}
+    \item $C^{disp}_{k}$: disposal cost per kilogram of wasted product $k \in K$, expressed in \$/kg.
+\end{itemize}
+
+\subsection{Financial Parameters}
+
+\begin{itemize}
+    \item $Y^{amort}$: amortization horizon for owned transportation assets, where $Y^{amort} = 5$ years.
+\end{itemize}
+
+\subsection{Environmental Parameters}
+
+\begin{itemize}
+    \item $E^{tr}_{l}$: carbon emission factor associated with transportation mode $l \in L$, expressed in kgCO$_2$ per kg-km.
+
+    \item $E^{mdc}$: carbon emission factor associated with mobile distribution center relocation, expressed in kgCO$_2$ per km.
+\end{itemize}
+
+\subsection{Big-M Parameters}
+
+\begin{itemize}
+    \item $M^{imp}_{k,s,e,t}$: sufficiently large constant associated with imported procurement of product $k \in K$ from supplier $s \in S^{imp}$ through entry point $e \in E$ in period $t \in T$.
+
+    \item $M^{cl}_{k,s,t}$: sufficiently large constant associated with domestic procurement of product $k \in K$ from supplier $s \in S^{cl}$ in period $t \in T$.
+
+    \item $M^{r}_{k,f,t}$: sufficiently large constant associated with replenishment of product $k \in K$ at facility $f \in F$ in period $t \in T$.
+
+    \item $M^{act}_f$: sufficiently large constant associated with activation of facility $f \in F$.
+\end{itemize}
+
+\subsection{Operational Service Parameters}
+
+\begin{itemize}
+    \item $T^{prep}$: order preparation time before dispatch, expressed in hours, where $T^{prep} = 2$.
+
+    \item $T^{last\text{-}mile}_{f}$: last-mile delivery time from facility $f \in F$ to the assigned service area, expressed in hours.
+\end{itemize}
+
+\newpage
+
+\section{Decision Variables}
+
+\subsection{Network Design Variables}
+\begin{itemize}
+    \item $y_z \in \{0,1\}$: binary variable equal to 1 if facility configuration $z \in \mathcal{Z}$ is selected, and 0 otherwise.
+\end{itemize}
+
+\subsection{Fleet Acquisition Variables}
+\begin{itemize}
+    \item $n_v \in \mathbb{Z}_{+}$: number of owned vehicles of type $v \in V$ acquired by the company.
+
+    \item $n^{mdc} \in \mathbb{Z}_{+}$: number of mobile distribution centers acquired.
+\end{itemize}
+
+\subsection{Sourcing Decision Variables}
+
+\subsubsection{Imported Sourcing}
+\begin{itemize}
+    \item $q^{imp}_{k,s,e,t} \geq 0$: quantity of product $k \in K$ purchased from imported supplier $s \in S^{imp}$ in period $t \in T$ entering through $e \in E$ (kg).
+\end{itemize}
+
+\subsubsection{Domestic Sourcing}
+\begin{itemize}
+    \item $q^{cl}_{k,s,t} \geq 0$: quantity of product $k \in K$ purchased from domestic supplier $s \in S^{cl}$ in period $t \in T$ (kg).
+\end{itemize}
+
+\subsubsection{Wholesale Market Sourcing}
+\begin{itemize}
+    \item $q^{wm}_{k,w,t} \geq 0$: quantity of product $k \in K$ purchased from wholesale market $w \in WM$ in period $t \in T$ (kg).
+\end{itemize}
+
+\subsection{Inbound Transportation Flow Variables}
+
+\subsubsection{Imported Flows}
+\begin{itemize}
+    \item $x^{E,DC}_{k,e,i,l,t} \geq 0$: quantity of product $k \in K$ transported from $e \in E$ to $i \in DC$ using mode $l \in L$ in period $t$ (kg).
+\end{itemize}
+
+\subsubsection{Domestic Flows}
+\begin{itemize}
+    \item $x^{S^{cl},DC}_{k,s,i,l,t} \geq 0$: quantity of product $k \in K$ transported from $s \in S^{cl}$ to $i \in DC$ using mode $l \in L$ in period $t$ (kg).
+\end{itemize}
+
+\subsubsection{Wholesale Market Flows}
+\begin{itemize}
+    \item $x^{WM,DC}_{k,w,i,l,t} \geq 0$: quantity of product $k \in K$ transported from $w \in WM$ to $i \in DC$ using mode $l \in L$ in period $t$ (kg).
+\end{itemize}
+
+\subsection{Internal Distribution Flow Variables}
+
+\subsubsection{DC to DS}
+\begin{itemize}
+    \item $x^{DC,DS}_{k,i,j,l,t} \geq 0$: quantity of product $k \in K$ transported from $i \in DC$ to $j \in DS$ using mode $l \in L$ in period $t$ (kg).
+\end{itemize}
+
+\subsubsection{DC to MDCP}
+\begin{itemize}
+    \item $x^{DC,MDCP}_{k,i,m,l,t} \geq 0$: quantity of product $k \in K$ transported from $i \in DC$ to $m \in MDCP$ using mode $l \in L$ in period $t$ (kg).
+\end{itemize}
+
+\subsection{Transportation Mode Decision Variables}
+\begin{itemize}
+    \item $l \in L = \{\text{own}, \text{outsourced}\}$ is explicitly chosen within each flow variable, determining whether transportation is performed using owned fleet or outsourced services.
+\end{itemize}
+
+\subsection{Inventory Variables}
+\begin{itemize}
+    \item $I_{k,f,t} \geq 0$: inventory level of product $k \in K$ at facility $f \in F$ at the end of period $t \in T$ (kg).
+\end{itemize}
+
+\subsection{Replenishment Policy Variables}
+\begin{itemize}
+    \item $r_{k,f,t} \in \{0,1\}$: binary variable equal to 1 if product $k \in K$ is replenished at facility $f \in F$ in period $t \in T$, and 0 otherwise.
+\end{itemize}
+
+\subsection{Service Variables}
+\begin{itemize}
+    \item $H_t \in \mathbb{Z}_{+}$: number of households served in period $t \in T$.
+
+    \item $Q^{srv}_{k,t} \geq 0$: quantity of product $k \in K$ delivered to customers in period $t \in T$ (kg).
+\end{itemize}
+
+\subsection{Waste Variables}
+\begin{itemize}
+    \item $W_{k,f,t} \geq 0$: quantity of product $k \in K$ wasted at facility $f \in F$ in period $t \in T$ (kg).
+\end{itemize}
+
+\subsection{Facility Throughput Variables}
+\begin{itemize}
+    \item $u_{k,f,t} \geq 0$: total quantity of product $k \in K$ handled at facility $f \in F$ during period $t \in T$ (kg).
+\end{itemize}
+
+\subsection{Facility Activation Variables}
+\begin{itemize}
+    \item $y_f \in \{0,1\}$: binary variable equal to 1 if facility $f \in F$ is active in the selected network configuration, and 0 otherwise.
+\end{itemize}
+
+\subsection{Customer Delivery Variables by Facility}
+\begin{itemize}
+    \item $q^{srv}_{k,f,t} \geq 0$: quantity of product $k \in K$ delivered to customers from facility $f \in F$ in period $t \in T$ (kg).
+\end{itemize}
+
+\subsection{Facility Throughput Variables}
+\begin{itemize}
+    \item $u_{k,i,t} \geq 0$: total quantity of product $k \in K$ handled at distribution center $i \in DC$ during period $t \in T$ (kg).
+\end{itemize}
+
+\newpage
+
+\section{Objective Function}
+
+The objective of the model is to maximize the total profit of the company over the planning horizon. Profit is defined as total revenue minus all relevant costs, including sourcing, transportation, inventory holding, waste disposal, facility operation, mobile distribution center operation, and investment costs.
+
+The objective function is composed of the following components:
+
+\begin{itemize}
+    \item Revenue
+    \item Sourcing Costs
+    \item Transportation Costs
+    \item Inventory Holding Costs
+    \item Waste Disposal Costs
+    \item Facility Operating Costs
+    \item Mobile Distribution Center Costs
+    \item Installation and Acquisition Costs
+\end{itemize}
+
+Thus, the objective function can be expressed as:
+
+\[
+\max Z =
+\text{Revenue}
+- \text{Sourcing Costs}
+- \text{Transportation Costs}
+- \text{Inventory Costs}
+- \text{Waste Costs}
+- \text{Facility Costs}
+- \text{MDC Costs}
+- \text{Investment Costs}
+\]
+
+\subsection{Revenue}
+
+Revenue is generated from product sales and delivery fees charged per order.
+
+\[
+\text{Revenue}
+=
+\sum_{t \in T} \sum_{k \in K} P_k \, Q^{srv}_{k,t}
++
+\sum_{t \in T} F^{del} \, H_t
+\]
+
+\subsection{Sourcing Costs}
+
+Sourcing costs include procurement from imported suppliers, domestic suppliers, and wholesale markets.
+
+\[
+\text{Sourcing Costs}
+=
+\sum_{t \in T} \sum_{k \in K} \sum_{s \in S^{imp}} \sum_{e \in E}
+C^{pur,imp}_{k,s,e} \, q^{imp}_{k,s,e,t}
+\]
+
+\[
++
+\sum_{t \in T} \sum_{k \in K} \sum_{s \in S^{cl}}
+C^{pur,cl}_{k,s} \, q^{cl}_{k,s,t}
+\]
+
+\[
++
+\sum_{t \in T} \sum_{k \in K} \sum_{w \in WM}
+C^{pur,wm}_{k,w} \, q^{wm}_{k,w,t}
+\]
+
+\subsection{Transportation Costs}
+
+Transportation costs include inbound logistics from suppliers and internal distribution across the network.
+
+\[
+\text{Transportation Costs}
+=
+\sum_{t \in T} \sum_{k \in K} \sum_{e \in E} \sum_{i \in DC} \sum_{l \in L}
+C^{tr}_l \, D^{E,DC}_{e,i} \, x^{E,DC}_{k,e,i,l,t}
+\]
+
+\[
++
+\sum_{t \in T} \sum_{k \in K} \sum_{s \in S^{cl}} \sum_{i \in DC} \sum_{l \in L}
+C^{tr}_l \, D^{S^{cl},DC}_{s,i} \, x^{S^{cl},DC}_{k,s,i,l,t}
+\]
+
+\[
++
+\sum_{t \in T} \sum_{k \in K} \sum_{w \in WM} \sum_{i \in DC} \sum_{l \in L}
+C^{tr}_l \, D^{WM,DC}_{w,i} \, x^{WM,DC}_{k,w,i,l,t}
+\]
+
+\[
++
+\sum_{t \in T} \sum_{k \in K} \sum_{i \in DC} \sum_{j \in DS} \sum_{l \in L}
+C^{tr}_l \, D^{DC,DS}_{i,j} \, x^{DC,DS}_{k,i,j,l,t}
+\]
+
+\[
++
+\sum_{t \in T} \sum_{k \in K} \sum_{i \in DC} \sum_{m \in MDCP} \sum_{l \in L}
+C^{tr}_l \, D^{DC,MDCP}_{i,m} \, x^{DC,MDCP}_{k,i,m,l,t}
+\]
+
+\subsection{Inventory Holding Costs}
+
+Inventory holding costs are incurred for storing products at facilities.
+
+\[
+\text{Inventory Costs}
+=
+\sum_{t \in T} \sum_{k \in K} \sum_{f \in F}
+C^{inv}_{k,f} \, I_{k,f,t}
+\]
+
+\subsection{Waste Disposal Costs}
+
+Waste costs are incurred when products perish and must be discarded.
+
+\[
+\text{Waste Costs}
+=
+\sum_{t \in T} \sum_{k \in K} \sum_{f \in F}
+C^{disp}_{k} \, W_{k,f,t}
+\]
+
+\subsection{Facility Operating Costs}
+
+Facility costs include fixed and variable operating costs.
+
+\[
+\text{Facility Costs}
+=
+\sum_{f \in F} C^{op,fix}_f
++
+\sum_{t \in T} \sum_{k \in K} \sum_{f \in F}
+C^{op,var}_f \cdot u_{k,i,t}
+\]
+
+\subsection{Mobile Distribution Center Costs}
+
+These costs include operation and relocation of mobile distribution centers.
+
+\[
+\text{MDC Costs}
+=
+\sum_{t \in T} C^{op,mdc} \, n^{mdc}
++
+\sum_{t \in T} \sum_{m,n \in MDCP}
+C^{mov} \, D^{MDCP,MDCP}_{m,n}
+\]
+
+\subsection{Installation and Acquisition Costs}
+
+These costs include facility opening and fleet acquisition, amortized over time.
+
+\[
+\text{Investment Costs}
+=
+\sum_{f \in F} C^{open}_f \, y_f
++
+\sum_{v \in V} C^{acq,tr}_v \, n_v
++
+C^{acq,mdc} \, n^{mdc}
+\]
+
+\newpage
+
+\section{Complete Objective Function}
+
+\begin{align*}
+\max Z = 
+& \underbrace{
+\sum_{t \in T} \sum_{k \in K} P_k \, Q^{srv}_{k,t}
++
+\sum_{t \in T} F^{del} \, H_t
+}_{\text{Revenue}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{t \in T} \sum_{k \in K}
+\left(
+\sum_{s \in S^{imp}} \sum_{e \in E} C^{pur,imp}_{k,s,e} \, q^{imp}_{k,s,e,t}
++
+\sum_{s \in S^{cl}} C^{pur,cl}_{k,s} \, q^{cl}_{k,s,t}
++
+\sum_{w \in WM} C^{pur,wm}_{k,w} \, q^{wm}_{k,w,t}
+\right)
+}_{\text{Sourcing Costs}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{t \in T} \sum_{k \in K} \sum_{l \in L}
+\left[
+\sum_{e \in E} \sum_{i \in DC} C^{tr}_l D^{E,DC}_{e,i} x^{E,DC}_{k,e,i,l,t}
++
+\sum_{s \in S^{cl}} \sum_{i \in DC} C^{tr}_l D^{S^{cl},DC}_{s,i} x^{S^{cl},DC}_{k,s,i,l,t}
+\right.
+}_{}
+\\
+& \quad
+\underbrace{
+\left.
++
+\sum_{w \in WM} \sum_{i \in DC} C^{tr}_l D^{WM,DC}_{w,i} x^{WM,DC}_{k,w,i,l,t}
++
+\sum_{i \in DC} \sum_{j \in DS} C^{tr}_l D^{DC,DS}_{i,j} x^{DC,DS}_{k,i,j,l,t}
++
+\sum_{i \in DC} \sum_{m \in MDCP} C^{tr}_l D^{DC,MDCP}_{i,m} x^{DC,MDCP}_{k,i,m,l,t}
+\right]
+}_{\text{Transportation Costs}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{t \in T} \sum_{k \in K} \sum_{f \in F}
+C^{inv}_{k,f} \, I_{k,f,t}
+}_{\text{Inventory Costs}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{t \in T} \sum_{k \in K} \sum_{f \in F}
+C^{disp}_{k} \, W_{k,f,t}
+}_{\text{Waste Costs}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{f \in F} C^{op,fix}_f
+}_{\text{Facility Fixed Costs}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{t \in T} \sum_{k \in K} \sum_{f \in F}
+C^{op,var}_f \, u_{k,i,t}
+}_{\text{Facility Variable Costs}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{t \in T} C^{op,mdc} \, n^{mdc}
++
+\sum_{t \in T} \sum_{m,n \in MDCP}
+C^{mov} \, D^{MDCP,MDCP}_{m,n}
+}_{\text{MDC Costs}}
+\\[6pt]
+& -
+\underbrace{
+\sum_{f \in F} C^{open}_f \, y_f
++
+\sum_{v \in V} C^{acq,tr}_v \, n_v
++
+C^{acq,mdc} \, n^{mdc}
+}_{\text{Investment Costs}}
+\end{align*}
+
+\newpage
+
+\newpage
+
+\section{Constraints}
+
+This section presents the constraints of the mathematical model. The formulation includes network design constraints, sourcing constraints, inventory balance constraints, throughput constraints, capacity constraints, service constraints, perishability constraints, and domain constraints.
+
+\subsection{Network Design Constraints}
+
+\subsubsection{Facility Configuration Selection}
+
+Exactly one feasible facility configuration must be selected.
+
+\[
+\sum_{z \in \mathcal{Z}} y_z = 1
+\]
+
+\subsubsection{Facility Activation under the Selected Configuration}
+
+A facility is active if and only if it belongs to the selected configuration.
+
+\[
+y_f = \sum_{z \in \mathcal{Z}} b_{f,z}\, y_z
+\qquad \forall f \in F
+\]
+
+\subsubsection{Mobile Distribution Center Acquisition Consistency}
+
+The number of acquired mobile distribution centers must be at least as large as the number of activated MDCP locations.
+
+\[
+\sum_{m \in MDCP} y_m \leq n^{mdc}
+\]
+
+\subsection{Demand and Service Constraints}
+
+\subsubsection{Served Demand Aggregation}
+
+The total quantity delivered to customers in each period equals the sum of deliveries dispatched from all active facilities.
+
+\[
+Q^{srv}_{k,t} = \sum_{f \in F} q^{srv}_{k,f,t}
+\qquad \forall k \in K,\; t \in T
+\]
+
+\subsubsection{Demand Upper Bound under the Selected Configuration}
+
+The served demand cannot exceed the maximum demand associated with the selected facility configuration.
+
+\[
+Q^{srv}_{k,t} \leq \sum_{z \in \mathcal{Z}} D^{\max}_{k,z}\, y_z
+\qquad \forall k \in K,\; t \in T
+\]
+
+\subsubsection{Fill Rate Requirement}
+
+The total demand served over the planning horizon must satisfy the minimum required fill rate.
+
+\[
+\sum_{t \in T} Q^{srv}_{k,t}
+\geq
+\beta \sum_{t \in T} \sum_{z \in \mathcal{Z}} D^{\max}_{k,z}\, y_z
+\qquad \forall k \in K
+\]
+
+\subsubsection{Expected Household Service Limit}
+
+The number of households served in each period cannot exceed the expected order arrivals under the selected configuration.
+
+\[
+H_t \leq \sum_{z \in \mathcal{Z}} \lambda_z\, y_z
+\qquad \forall t \in T
+\]
+
+\subsection{Sourcing Constraints}
+
+\subsubsection{Imported Product Availability}
+
+Imported procurement is allowed only when the product is available from the corresponding supplier during the month of the period.
+
+\[
+q^{imp}_{k,s,e,t}
+\leq
+M^{imp}_{k,s,e,t}
+\sum_{m \in M} a_{k,s,m}\,\delta_{t,m}
+\qquad
+\forall k \in K,\; s \in S^{imp},\; e \in E,\; t \in T
+\]
+
+\subsubsection{Domestic Product Availability}
+
+Domestic procurement is allowed only when the product is available from the corresponding domestic supplier during the month of the period.
+
+\[
+q^{cl}_{k,s,t}
+\leq
+M^{cl}_{k,s,t}
+\sum_{m \in M} a_{k,s,m}\,\delta_{t,m}
+\qquad
+\forall k \in K,\; s \in S^{cl},\; t \in T
+\]
+
+\subsubsection{Imported Procurement-Flow Consistency}
+
+All imported purchased quantity must be transported from the entry point to a distribution center.
+
+\[
+q^{imp}_{k,s,e,t}
+=
+\sum_{i \in DC}\sum_{l \in L} x^{E,DC}_{k,e,i,l,t}
+\qquad
+\forall k \in K,\; s \in S^{imp},\; e \in E,\; t \in T
+\]
+
+\subsubsection{Domestic Procurement-Flow Consistency}
+
+All domestic purchased quantity must be transported to a distribution center.
+
+\[
+q^{cl}_{k,s,t}
+=
+\sum_{i \in DC}\sum_{l \in L} x^{S^{cl},DC}_{k,s,i,l,t}
+\qquad
+\forall k \in K,\; s \in S^{cl},\; t \in T
+\]
+
+\subsubsection{Wholesale Market Procurement-Flow Consistency}
+
+All wholesale market purchased quantity must be transported to a distribution center.
+
+\[
+q^{wm}_{k,w,t}
+=
+\sum_{i \in DC}\sum_{l \in L} x^{WM,DC}_{k,w,i,l,t}
+\qquad
+\forall k \in K,\; w \in WM,\; t \in T
+\]
+
+\subsection{Inventory Balance Constraints}
+
+\subsubsection{Inventory Balance at Distribution Centers}
+
+For each distribution center, inventory at the end of the period equals previous inventory plus inbound flows minus outbound flows to downstream facilities, minus customer deliveries, minus waste.
+
+\begin{align*}
+I_{k,i,t}
+=
+& \; I_{k,i,t-1}
++ \sum_{e \in E}\sum_{l \in L} x^{E,DC}_{k,e,i,l,t}
++ \sum_{s \in S^{cl}}\sum_{l \in L} x^{S^{cl},DC}_{k,s,i,l,t}
++ \sum_{w \in WM}\sum_{l \in L} x^{WM,DC}_{k,w,i,l,t} \\
+& - \sum_{j \in DS}\sum_{l \in L} x^{DC,DS}_{k,i,j,l,t}
+- \sum_{m \in MDCP}\sum_{l \in L} x^{DC,MDCP}_{k,i,m,l,t}
+- q^{srv}_{k,i,t}
+- W_{k,i,t}
+\\
+& \qquad \forall k \in K,\; i \in DC,\; t \in T
+\end{align*}
+
+\subsubsection{Inventory Balance at Dark Stores}
+
+For each dark store, inventory at the end of the period equals previous inventory plus replenishment received from distribution centers minus customer deliveries and waste.
+
+\[
+I_{k,j,t}
+=
+I_{k,j,t-1}
++
+\sum_{i \in DC}\sum_{l \in L} x^{DC,DS}_{k,i,j,l,t}
+-
+q^{srv}_{k,j,t}
+-
+W_{k,j,t}
+\qquad
+\forall k \in K,\; j \in DS,\; t \in T
+\]
+
+\subsubsection{Inventory Balance at Mobile Distribution Centers}
+
+For each mobile distribution center parking location, inventory at the end of the period equals previous inventory plus replenishment received from distribution centers minus customer deliveries and waste.
+
+\[
+I_{k,m,t}
+=
+I_{k,m,t-1}
++
+\sum_{i \in DC}\sum_{l \in L} x^{DC,MDCP}_{k,i,m,l,t}
+-
+q^{srv}_{k,m,t}
+-
+W_{k,m,t}
+\qquad
+\forall k \in K,\; m \in MDCP,\; t \in T
+\]
+
+\subsubsection{Initial Inventory Conditions}
+
+Initial inventory levels are exogenously given.
+
+\[
+I_{k,f,0} = I^0_{k,f}
+\qquad
+\forall k \in K,\; f \in F
+\]
+
+\subsection{Facility Throughput Constraints}
+
+\subsubsection{Distribution Center Throughput Definition}
+
+The handled throughput at each distribution center is defined as the sum of inbound and outbound flows during the period.
+
+\begin{align*}
+u_{k,i,t}
+=
+& \; \sum_{e \in E}\sum_{l \in L} x^{E,DC}_{k,e,i,l,t}
++ \sum_{s \in S^{cl}}\sum_{l \in L} x^{S^{cl},DC}_{k,s,i,l,t}
++ \sum_{w \in WM}\sum_{l \in L} x^{WM,DC}_{k,w,i,l,t} \\
+& + \sum_{j \in DS}\sum_{l \in L} x^{DC,DS}_{k,i,j,l,t}
++ \sum_{m \in MDCP}\sum_{l \in L} x^{DC,MDCP}_{k,i,m,l,t}
+\\
+& \qquad \forall k \in K,\; i \in DC,\; t \in T
+\end{align*}
+
+\subsection{Facility Capacity Constraints}
+
+\subsubsection{Inventory Capacity at Facilities}
+
+Stored inventory cannot exceed the capacity of an active facility.
+
+\[
+\sum_{k \in K} I_{k,f,t} \leq Cap_f\, y_f
+\qquad
+\forall f \in F,\; t \in T
+\]
+
+\subsubsection{Safety Stock Requirement}
+
+Inventory at each active facility must be at least the required safety stock level.
+
+\[
+I_{k,f,t} \geq SS_{k,f}\, y_f
+\qquad
+\forall k \in K,\; f \in F,\; t \in T
+\]
+
+\subsection{Replenishment Constraints}
+
+\subsubsection{Replenishment Activation at Distribution Centers}
+
+Inbound replenishment to a distribution center can only occur if replenishment is activated in that period.
+
+\begin{align*}
+& \sum_{e \in E}\sum_{l \in L} x^{E,DC}_{k,e,i,l,t}
++ \sum_{s \in S^{cl}}\sum_{l \in L} x^{S^{cl},DC}_{k,s,i,l,t}
++ \sum_{w \in WM}\sum_{l \in L} x^{WM,DC}_{k,w,i,l,t}
+\\
+& \qquad \leq M^{r}_{k,i,t}\, r_{k,i,t}
+\qquad
+\forall k \in K,\; i \in DC,\; t \in T
+\end{align*}
+
+\subsubsection{Replenishment Activation at Dark Stores}
+
+Replenishment to a dark store can only occur if replenishment is activated in that period.
+
+\[
+\sum_{i \in DC}\sum_{l \in L} x^{DC,DS}_{k,i,j,l,t}
+\leq
+M^{r}_{k,j,t}\, r_{k,j,t}
+\qquad
+\forall k \in K,\; j \in DS,\; t \in T
+\]
+
+\subsubsection{Replenishment Activation at Mobile Distribution Centers}
+
+Replenishment to an MDCP can only occur if replenishment is activated in that period.
+
+\[
+\sum_{i \in DC}\sum_{l \in L} x^{DC,MDCP}_{k,i,m,l,t}
+\leq
+M^{r}_{k,m,t}\, r_{k,m,t}
+\qquad
+\forall k \in K,\; m \in MDCP,\; t \in T
+\]
+
+\subsection{Transportation Capacity Constraints}
+
+\subsubsection{Owned Fleet Capacity}
+
+The total quantity transported using owned vehicles in each period cannot exceed the available owned fleet capacity.
+
+\begin{align*}
+& \sum_{k \in K}
+\Bigg[
+\sum_{e \in E}\sum_{i \in DC} x^{E,DC}_{k,e,i,\text{own},t}
++
+\sum_{s \in S^{cl}}\sum_{i \in DC} x^{S^{cl},DC}_{k,s,i,\text{own},t}
+\\
+& \qquad +
+\sum_{w \in WM}\sum_{i \in DC} x^{WM,DC}_{k,w,i,\text{own},t}
++
+\sum_{i \in DC}\sum_{j \in DS} x^{DC,DS}_{k,i,j,\text{own},t}
++
+\sum_{i \in DC}\sum_{m \in MDCP} x^{DC,MDCP}_{k,i,m,\text{own},t}
+\Bigg]
+\\
+& \qquad \leq \sum_{v \in V} Q_v\, N_v\, n_v
+\qquad
+\forall t \in T
+\end{align*}
+
+\subsubsection{Mobile Distribution Center Delivery Capacity}
+
+The quantity delivered from MDCP facilities in each period cannot exceed the total mobile distribution center operational capacity.
+
+\[
+\sum_{k \in K}\sum_{m \in MDCP} q^{srv}_{k,m,t}
+\leq
+Q^{mdc}\, N^{tour}_{mdc}\, n^{mdc}
+\qquad
+\forall t \in T
+\]
+
+\subsection{Facility Activation Constraints}
+
+\subsubsection{Flows Allowed Only Through Active Facilities}
+
+No flow, storage, or customer service can take place through inactive facilities.
+
+\[
+\sum_{k \in K}\sum_{t \in T} q^{srv}_{k,f,t}
+\leq
+M^{act}_f\, y_f
+\qquad
+\forall f \in F
+\]
+
+\[
+\sum_{k \in K}\sum_{t \in T} I_{k,f,t}
+\leq
+M^{act}_f\, y_f
+\qquad
+\forall f \in F
+\]
+
+For distribution centers:
+
+\[
+\sum_{k \in K}\sum_{t \in T}
+\left[
+\sum_{e \in E}\sum_{l \in L} x^{E,DC}_{k,e,i,l,t}
++
+\sum_{s \in S^{cl}}\sum_{l \in L} x^{S^{cl},DC}_{k,s,i,l,t}
++
+\sum_{w \in WM}\sum_{l \in L} x^{WM,DC}_{k,w,i,l,t}
+\right]
+\leq
+M^{act}_i\, y_i
+\qquad
+\forall i \in DC
+\]
+
+For dark stores:
+
+\[
+\sum_{k \in K}\sum_{t \in T}\sum_{i \in DC}\sum_{l \in L}
+x^{DC,DS}_{k,i,j,l,t}
+\leq
+M^{act}_j\, y_j
+\qquad
+\forall j \in DS
+\]
+
+For MDCP facilities:
+
+\[
+\sum_{k \in K}\sum_{t \in T}\sum_{i \in DC}\sum_{l \in L}
+x^{DC,MDCP}_{k,i,m,l,t}
+\leq
+M^{act}_m\, y_m
+\qquad
+\forall m \in MDCP
+\]
+
+\subsection{Perishability and Freshness Constraints}
+
+\subsubsection{Freshness Feasibility Condition}
+
+A product can only be delivered if the remaining shelf life at the time of customer delivery is at least the required threshold.
+
+\[
+\tau^{pack}_k + \tau^{imp}_{s,e,i} \leq (1-\theta)\, T_k
+\qquad
+\forall k \in K,\; s \in S^{imp},\; e \in E,\; i \in DC
+\]
+
+\[
+\tau^{pack}_k + \tau^{cl}_{s,i} \leq (1-\theta)\, T_k
+\qquad
+\forall k \in K,\; s \in S^{cl},\; i \in DC
+\]
+
+\[
+\tau^{pack}_k + \tau^{wm}_{w,i} \leq (1-\theta)\, T_k
+\qquad
+\forall k \in K,\; w \in WM,\; i \in DC
+\]
+
+\subsubsection{Waste Generation Consistency}
+
+Waste at each facility cannot exceed the inventory available during the period.
+
+\[
+W_{k,f,t} \leq I_{k,f,t-1} + \sum_{h \in \mathcal{I}(f)} x_{k,h,f,t}
+\qquad
+\forall k \in K,\; f \in F,\; t \in T
+\]
+
+where \(\mathcal{I}(f)\) denotes the set of upstream nodes that can send product to facility \(f\).
+
+\subsection{Operational Service Constraints}
+
+\subsubsection{Delivery-Time Compliance}
+
+Customer deliveries must satisfy the maximum allowed service window.
+
+\[
+T^{prep} + T^{last\text{-}mile}_{f} \leq 20
+\qquad
+\forall f \in F \text{ such that } q^{srv}_{k,f,t} > 0
+\]
+
+where \(T^{prep}=2\) hours denotes the order preparation time before dispatch.
+
+\subsection{Variable Domain Constraints}
+
+\subsubsection{Binary Variables}
+
+\[
+y_z \in \{0,1\}
+\qquad \forall z \in \mathcal{Z}
+\]
+
+\[
+y_f \in \{0,1\}
+\qquad \forall f \in F
+\]
+
+\[
+r_{k,f,t} \in \{0,1\}
+\qquad \forall k \in K,\; f \in F,\; t \in T
+\]
+
+\subsubsection{Integer Variables}
+
+\[
+n_v \in \mathbb{Z}_{+}
+\qquad \forall v \in V
+\]
+
+\[
+n^{mdc} \in \mathbb{Z}_{+}
+\]
+
+\[
+H_t \in \mathbb{Z}_{+}
+\qquad \forall t \in T
+\]
+
+\subsubsection{Non-Negative Continuous Variables}
+
+\[
+q^{imp}_{k,s,e,t},\;
+q^{cl}_{k,s,t},\;
+q^{wm}_{k,w,t},\;
+x^{E,DC}_{k,e,i,l,t},\;
+x^{S^{cl},DC}_{k,s,i,l,t},\;
+x^{WM,DC}_{k,w,i,l,t},
+\]
+\[
+x^{DC,DS}_{k,i,j,l,t},\;
+x^{DC,MDCP}_{k,i,m,l,t},\;
+I_{k,f,t},\;
+Q^{srv}_{k,t},\;
+q^{srv}_{k,f,t},\;
+W_{k,f,t},\;
+u_{k,i,t}
+\geq 0
+\]
+
+for all feasible index combinations.
+
+
+\end{document}
