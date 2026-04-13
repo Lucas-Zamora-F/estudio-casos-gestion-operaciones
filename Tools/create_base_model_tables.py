@@ -15,6 +15,7 @@ E_DATA = [
     ("Arturo Merino Benitez International Airport", "Airport", -33.392, -70.785),
     ("San Antonio", "Port", -33.593, -71.621),
     ("Valparaiso", "Port", -33.047, -71.612),
+    ("Chacayuta", "Land customs", -18.348, -70.338),
 ]
 
 WM_DATA = [
