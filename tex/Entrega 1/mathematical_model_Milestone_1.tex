@@ -1,0 +1,139 @@
+\documentclass[12pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{rotating}
+\usepackage{pdflscape}
+
+
+\geometry{a4paper, margin=2.5cm}
+
+\begin{document}
+
+\begin{titlepage}
+
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{../../source/4f7fe812-7dfc-453d-92a3-e04b74be52a8.jpeg}
+    \end{center}
+
+    \vspace{4cm}
+
+    \begin{center}
+        {\large Case Studies in Operations Management}\\[0.5cm]
+        {\LARGE \textbf{Mathematical Model Milestone 1}}\\[0.3cm]
+        {\Large Business and Logistics Plan for ``Fresh Veggie'' (FV)}
+    \end{center}
+
+    \vfill
+
+    \begin{flushright}
+        \textbf{Authors:}\\
+        Alexander Jesus Balazs Sabag\\
+        Lucas Felipe Camino Alcalde\\
+        Juan Eduardo Escalona Pardo\\
+        Vicente Velasquez Aime\\
+        Lucas Zamora Fochesato\\[0.8cm]
+
+        \textbf{Instructor:}\\
+        Rosa Guadalupe Gonzalez Ramirez\\[0.8cm]
+
+        \textbf{Date:}\\ April 10, 2026
+    \end{flushright}
+
+\end{titlepage}
+
+\section{Model Assumptions}
+
+The model corresponds to a first-stage strategic network design. It evaluates a set of predefined facility configurations and selects the one that maximizes estimated annual profit.
+
+The following simplifying assumptions are adopted:
+
+\begin{itemize}
+    \item Demand is constant over the year and derived from per-capita consumption.
+    \item Each facility configuration $z \in \mathcal{Z}$ has a precomputed coverage level $p(z)$ measured in number of people.
+    \item The company can serve at most a fraction $\alpha^{max}$ of the covered population.
+    \item Revenue is estimated using per-capita annual demand and average selling prices.
+    \item Only fixed opening costs of facilities are considered at this stage.
+\end{itemize}
+
+\newpage
+
+\section{Sets}
+\begin{itemize}
+    \item $F$: set of all candidate facilities.
+    
+    \item $\mathcal{Z}$: set of all feasible facility configurations, where each $z \in \mathcal{Z}$ is a binary vector indicating which facilities are active.
+    
+    \item $K$: set of products:
+    \[
+    K = \{\text{Roma Tomatoes}, \text{Cauliflower}, \text{Broccoli}, \text{Asparagus}, \text{Green Bell Pepper}\}
+    \]
+\end{itemize}
+
+\newpage
+
+\section{Parameters}
+
+\begin{itemize}
+    \item $p(z)$: number of people covered by configuration $z \in \mathcal{Z}$.
+    
+    \item $\alpha^{max}$: maximum fraction of covered demand that can be served.
+    
+    \item $D^{pc,ann}_k$: annual per-capita demand of product $k \in K$, expressed in kg/person/year.
+    
+    \item $P_k$: selling price per kilogram of product $k \in K$, expressed in \$/kg.
+    
+    \item $b_{f,z}$: binary parameter equal to 1 if facility $f \in F$ is included in configuration $z$, and 0 otherwise.
+    
+    \item $C^{open}_f$: fixed cost of opening facility $f \in F$, expressed in \$.
+\end{itemize}
+
+\newpage
+
+\section{Decision Variables}
+
+\begin{itemize}
+    \item $y_z \in \{0,1\}$: binary variable equal to 1 if configuration $z \in \mathcal{Z}$ is selected, and 0 otherwise.
+\end{itemize}
+
+\newpage
+
+\section{Objective Function}
+
+The objective is to maximize the estimated annual profit associated with the selected facility configuration.
+
+\[
+\max \sum_{z \in \mathcal{Z}} 
+\left[
+p(z)\,\alpha^{max} \sum_{k \in K} P_k D^{pc,ann}_k
+-
+\sum_{f \in F} C^{open}_f \, b_{f,z}
+\right] y_z
+\]
+
+\newpage
+
+\section{Constraints}
+
+\subsection{Configuration Selection}
+
+Exactly one facility configuration must be selected:
+
+\[
+\sum_{z \in \mathcal{Z}} y_z = 1
+\]
+
+\subsection{Binary Variables}
+
+\[
+y_z \in \{0,1\}, \quad \forall z \in \mathcal{Z}
+\]
+
+\end{document}
