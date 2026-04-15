@@ -1,0 +1,123 @@
+{
+  "model_name": "dc_only",
+  "model_dir": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only",
+  "graph_dir": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\graph",
+  "months": [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  "summary": {
+    "scenario": "dc_only",
+    "status": "Optimal",
+    "objective_value": 31008159.80007699,
+    "selected_z": "z_196608",
+    "covered_population": 5529584.830031509
+  },
+  "csvs": {
+    "summary.csv": {
+      "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\summary.csv",
+      "exists": true,
+      "size_bytes": 125,
+      "rows": 1,
+      "columns": [
+        "scenario",
+        "status",
+        "objective_value",
+        "selected_z",
+        "covered_population"
+      ]
+    },
+    "config_selection.csv": {
+      "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\config_selection.csv",
+      "exists": true,
+      "size_bytes": 84,
+      "rows": 1,
+      "columns": [
+        "scenario",
+        "z_name",
+        "y_value",
+        "covered_population"
+      ]
+    },
+    "open_facilities.csv": {
+      "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\open_facilities.csv",
+      "exists": true,
+      "size_bytes": 188,
+      "rows": 2,
+      "columns": [
+        "scenario",
+        "z_name",
+        "facility",
+        "facility_type",
+        "covered_population",
+        "open_cost_usd"
+      ]
+    },
+    "purchases.csv": {
+      "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\purchases.csv",
+      "exists": true,
+      "size_bytes": 5071,
+      "rows": 60,
+      "columns": [
+        "scenario",
+        "purchase_type",
+        "product",
+        "origin",
+        "entry_point",
+        "month",
+        "quantity_kg",
+        "unit_cost_usd_per_kg",
+        "total_purchase_cost_usd"
+      ]
+    },
+    "flows.csv": {
+      "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\flows.csv",
+      "exists": true,
+      "size_bytes": 8600,
+      "rows": 120,
+      "columns": [
+        "scenario",
+        "flow_type",
+        "product",
+        "origin",
+        "destination",
+        "month",
+        "quantity_kg",
+        "distance_km"
+      ]
+    },
+    "deliveries.csv": {
+      "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\deliveries.csv",
+      "exists": true,
+      "size_bytes": 8109,
+      "rows": 120,
+      "columns": [
+        "scenario",
+        "product",
+        "facility",
+        "facility_type",
+        "month",
+        "quantity_kg",
+        "last_mile_distance_km",
+        "revenue_usd"
+      ]
+    },
+    "mdc_assignment.csv": {
+      "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\dc_only\\mdc_assignment.csv",
+      "exists": true,
+      "size_bytes": 2,
+      "rows": 0,
+      "columns": []
+    }
+  }
+}

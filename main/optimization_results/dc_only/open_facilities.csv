@@ -1,0 +1,3 @@
+scenario,z_name,facility,facility_type,covered_population,open_cost_usd
+dc_only,z_196608,DC_Macul,DC,4714932.830452755,8810000.0
+dc_only,z_196608,DC_Maipu,DC,3114031.43053672,5726500.0

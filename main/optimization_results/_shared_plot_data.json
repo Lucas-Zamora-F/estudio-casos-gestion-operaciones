@@ -1,0 +1,454 @@
+{
+  "created_at": "2026-04-13 22:01:34",
+  "model_db_path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\Sets\\model.db",
+  "base_results_dir": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results",
+  "shared_plot_data_path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\_shared_plot_data.json",
+  "global_ors_cache_path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\main\\optimization_results\\_ors_global_cache.json",
+  "shapefile": {
+    "path": "C:\\Users\\Lucas Zamora\\Desktop\\estudio-casos-gestion-operaciones\\extern data\\DPA 2024\\COMUNAS\\COMUNAS_v1.shp",
+    "rows": 345,
+    "columns": [
+      "CUT_REG",
+      "CUT_PROV",
+      "CUT_COM",
+      "REGION",
+      "PROVINCIA",
+      "COMUNA",
+      "SUPERFICIE",
+      "geometry"
+    ],
+    "crs": "EPSG:5360",
+    "bounds": {
+      "min_lon": -109.45491615599997,
+      "min_lat": -56.53776581899995,
+      "max_lon": -66.41559401099994,
+      "max_lat": -17.49839933599998
+    }
+  },
+  "counts": {
+    "E": 4,
+    "F": 19,
+    "S_cl": 4,
+    "WM": 2,
+    "all_points": 29,
+    "ors_cached_routes": 6
+  },
+  "lookups": {
+    "E": {
+      "Arturo Merino Benitez International Airport": {
+        "name": "Arturo Merino Benitez International Airport",
+        "category": "E",
+        "type": "Airport",
+        "lat": -33.392,
+        "lon": -70.785
+      },
+      "San Antonio": {
+        "name": "San Antonio",
+        "category": "E",
+        "type": "Port",
+        "lat": -33.593,
+        "lon": -71.621
+      },
+      "Valparaiso": {
+        "name": "Valparaiso",
+        "category": "E",
+        "type": "Port",
+        "lat": -33.047,
+        "lon": -71.612
+      },
+      "Chacalluta": {
+        "name": "Chacalluta",
+        "category": "E",
+        "type": "Land customs",
+        "lat": -18.348,
+        "lon": -70.338
+      }
+    },
+    "F": {
+      "DC_Maipu": {
+        "name": "DC_Maipu",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.530964,
+        "lon": -70.764846
+      },
+      "DC_Conchali": {
+        "name": "DC_Conchali",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.373221,
+        "lon": -70.695362
+      },
+      "DC_Macul": {
+        "name": "DC_Macul",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.484915,
+        "lon": -70.61243
+      },
+      "DC_Quilicura": {
+        "name": "DC_Quilicura",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.344485,
+        "lon": -70.709559
+      },
+      "DC_San_Bernardo": {
+        "name": "DC_San_Bernardo",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.678413,
+        "lon": -70.728591
+      },
+      "DS_Providencia": {
+        "name": "DS_Providencia",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.432897,
+        "lon": -70.630474
+      },
+      "DS_San_Miguel": {
+        "name": "DS_San_Miguel",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.477581,
+        "lon": -70.64197
+      },
+      "DS_Puente_Alto": {
+        "name": "DS_Puente_Alto",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.606396,
+        "lon": -70.563127
+      },
+      "DS_La_Florida": {
+        "name": "DS_La_Florida",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.561758,
+        "lon": -70.578209
+      },
+      "DS_Lo_Barnechea": {
+        "name": "DS_Lo_Barnechea",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.359486,
+        "lon": -70.515298
+      },
+      "DS_Independencia": {
+        "name": "DS_Independencia",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.423766,
+        "lon": -70.662034
+      },
+      "DS_Lo_Espejo": {
+        "name": "DS_Lo_Espejo",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.5345,
+        "lon": -70.692455
+      },
+      "DS_Conchali": {
+        "name": "DS_Conchali",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.378644,
+        "lon": -70.693355
+      },
+      "DS_Cerro_Navia": {
+        "name": "DS_Cerro_Navia",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.422698,
+        "lon": -70.740202
+      },
+      "DS_Estacion_Central": {
+        "name": "DS_Estacion_Central",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.45244,
+        "lon": -70.683859
+      },
+      "MDCP_Pudahuel": {
+        "name": "MDCP_Pudahuel",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.45941,
+        "lon": -70.864273
+      },
+      "MDCP_Quilicura": {
+        "name": "MDCP_Quilicura",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.374762,
+        "lon": -70.714256
+      },
+      "MDCP_Providencia": {
+        "name": "MDCP_Providencia",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.433112,
+        "lon": -70.630817
+      },
+      "MDCP_San_Bernardo": {
+        "name": "MDCP_San_Bernardo",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.585767,
+        "lon": -70.699079
+      }
+    },
+    "S_cl": {
+      "Chile-Scl": {
+        "name": "Chile-Scl",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -33.448,
+        "lon": -70.669
+      },
+      "Chile-Vap": {
+        "name": "Chile-Vap",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -33.047,
+        "lon": -71.612
+      },
+      "Chile-Maul": {
+        "name": "Chile-Maul",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -35.426,
+        "lon": -71.655
+      },
+      "Chile-Coq": {
+        "name": "Chile-Coq",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -29.969886,
+        "lon": -71.337173
+      }
+    },
+    "WM": {
+      "La Vega Central": {
+        "name": "La Vega Central",
+        "category": "WM",
+        "type": "WM",
+        "lat": -33.419,
+        "lon": -70.648
+      },
+      "Lo Valledor": {
+        "name": "Lo Valledor",
+        "category": "WM",
+        "type": "WM",
+        "lat": -33.504,
+        "lon": -70.699
+      }
+    },
+    "all_points": {
+      "Arturo Merino Benitez International Airport": {
+        "name": "Arturo Merino Benitez International Airport",
+        "category": "E",
+        "type": "Airport",
+        "lat": -33.392,
+        "lon": -70.785
+      },
+      "San Antonio": {
+        "name": "San Antonio",
+        "category": "E",
+        "type": "Port",
+        "lat": -33.593,
+        "lon": -71.621
+      },
+      "Valparaiso": {
+        "name": "Valparaiso",
+        "category": "E",
+        "type": "Port",
+        "lat": -33.047,
+        "lon": -71.612
+      },
+      "Chacalluta": {
+        "name": "Chacalluta",
+        "category": "E",
+        "type": "Land customs",
+        "lat": -18.348,
+        "lon": -70.338
+      },
+      "DC_Maipu": {
+        "name": "DC_Maipu",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.530964,
+        "lon": -70.764846
+      },
+      "DC_Conchali": {
+        "name": "DC_Conchali",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.373221,
+        "lon": -70.695362
+      },
+      "DC_Macul": {
+        "name": "DC_Macul",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.484915,
+        "lon": -70.61243
+      },
+      "DC_Quilicura": {
+        "name": "DC_Quilicura",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.344485,
+        "lon": -70.709559
+      },
+      "DC_San_Bernardo": {
+        "name": "DC_San_Bernardo",
+        "category": "F",
+        "type": "DC",
+        "lat": -33.678413,
+        "lon": -70.728591
+      },
+      "DS_Providencia": {
+        "name": "DS_Providencia",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.432897,
+        "lon": -70.630474
+      },
+      "DS_San_Miguel": {
+        "name": "DS_San_Miguel",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.477581,
+        "lon": -70.64197
+      },
+      "DS_Puente_Alto": {
+        "name": "DS_Puente_Alto",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.606396,
+        "lon": -70.563127
+      },
+      "DS_La_Florida": {
+        "name": "DS_La_Florida",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.561758,
+        "lon": -70.578209
+      },
+      "DS_Lo_Barnechea": {
+        "name": "DS_Lo_Barnechea",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.359486,
+        "lon": -70.515298
+      },
+      "DS_Independencia": {
+        "name": "DS_Independencia",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.423766,
+        "lon": -70.662034
+      },
+      "DS_Lo_Espejo": {
+        "name": "DS_Lo_Espejo",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.5345,
+        "lon": -70.692455
+      },
+      "DS_Conchali": {
+        "name": "DS_Conchali",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.378644,
+        "lon": -70.693355
+      },
+      "DS_Cerro_Navia": {
+        "name": "DS_Cerro_Navia",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.422698,
+        "lon": -70.740202
+      },
+      "DS_Estacion_Central": {
+        "name": "DS_Estacion_Central",
+        "category": "F",
+        "type": "DS",
+        "lat": -33.45244,
+        "lon": -70.683859
+      },
+      "MDCP_Pudahuel": {
+        "name": "MDCP_Pudahuel",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.45941,
+        "lon": -70.864273
+      },
+      "MDCP_Quilicura": {
+        "name": "MDCP_Quilicura",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.374762,
+        "lon": -70.714256
+      },
+      "MDCP_Providencia": {
+        "name": "MDCP_Providencia",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.433112,
+        "lon": -70.630817
+      },
+      "MDCP_San_Bernardo": {
+        "name": "MDCP_San_Bernardo",
+        "category": "F",
+        "type": "MDCP",
+        "lat": -33.585767,
+        "lon": -70.699079
+      },
+      "Chile-Scl": {
+        "name": "Chile-Scl",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -33.448,
+        "lon": -70.669
+      },
+      "Chile-Vap": {
+        "name": "Chile-Vap",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -33.047,
+        "lon": -71.612
+      },
+      "Chile-Maul": {
+        "name": "Chile-Maul",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -35.426,
+        "lon": -71.655
+      },
+      "Chile-Coq": {
+        "name": "Chile-Coq",
+        "category": "S_cl",
+        "type": "S_cl",
+        "lat": -29.969886,
+        "lon": -71.337173
+      },
+      "La Vega Central": {
+        "name": "La Vega Central",
+        "category": "WM",
+        "type": "WM",
+        "lat": -33.419,
+        "lon": -70.648
+      },
+      "Lo Valledor": {
+        "name": "Lo Valledor",
+        "category": "WM",
+        "type": "WM",
+        "lat": -33.504,
+        "lon": -70.699
+      }
+    }
+  }
+}

@@ -1,0 +1,121 @@
+scenario,flow_type,product,origin,destination,month,quantity_kg,distance_km
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Jan,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Feb,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Mar,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Apr,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,May,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Jun,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Jul,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Aug,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Sep,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Oct,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Nov,141063.13,118.19
+dc_mdcp,E_to_DC,Broccoli,San Antonio,DC_Macul,Dec,141063.13,118.19
+dc_mdcp,E_to_DC,Cauliflower,San Antonio,DC_Macul,Jan,277648.06,118.19
+dc_mdcp,E_to_DC,Cauliflower,San Antonio,DC_Macul,Feb,277648.06,118.19
+dc_mdcp,E_to_DC,Cauliflower,San Antonio,DC_Macul,Mar,277648.06,118.19
+dc_mdcp,E_to_DC,Cauliflower,San Antonio,DC_Macul,Oct,277648.06,118.19
+dc_mdcp,E_to_DC,Cauliflower,San Antonio,DC_Macul,Nov,277648.06,118.19
+dc_mdcp,E_to_DC,Cauliflower,San Antonio,DC_Macul,Dec,277648.06,118.19
+dc_mdcp,Scl_to_DC,Asparagus,Chile-Scl,DC_Macul,Sep,13434.583,9.01
+dc_mdcp,Scl_to_DC,Asparagus,Chile-Scl,DC_Macul,Oct,13434.583,9.01
+dc_mdcp,Scl_to_DC,Asparagus,Chile-Scl,DC_Macul,Nov,13434.583,9.01
+dc_mdcp,Scl_to_DC,Asparagus,Chile-Scl,DC_Macul,Dec,13434.583,9.01
+dc_mdcp,Scl_to_DC,Cauliflower,Chile-Scl,DC_Macul,Apr,277648.06,9.01
+dc_mdcp,Scl_to_DC,Cauliflower,Chile-Scl,DC_Macul,May,277648.06,9.01
+dc_mdcp,Scl_to_DC,Cauliflower,Chile-Scl,DC_Macul,Jun,277648.06,9.01
+dc_mdcp,Scl_to_DC,Cauliflower,Chile-Scl,DC_Macul,Jul,277648.06,9.01
+dc_mdcp,Scl_to_DC,Cauliflower,Chile-Scl,DC_Macul,Aug,277648.06,9.01
+dc_mdcp,Scl_to_DC,Cauliflower,Chile-Scl,DC_Macul,Sep,277648.06,9.01
+dc_mdcp,Scl_to_DC,Green Bell Pepper,Chile-Scl,DC_Macul,Jan,118448.24,9.01
+dc_mdcp,Scl_to_DC,Green Bell Pepper,Chile-Scl,DC_Macul,Feb,118448.24,9.01
+dc_mdcp,Scl_to_DC,Green Bell Pepper,Chile-Scl,DC_Macul,Mar,118448.24,9.01
+dc_mdcp,Scl_to_DC,Green Bell Pepper,Chile-Scl,DC_Macul,Apr,118448.24,9.01
+dc_mdcp,Scl_to_DC,Roma Tomatoes,Chile-Scl,DC_Macul,Jan,1632637.7,9.01
+dc_mdcp,Scl_to_DC,Roma Tomatoes,Chile-Scl,DC_Macul,Feb,1632637.7,9.01
+dc_mdcp,Scl_to_DC,Roma Tomatoes,Chile-Scl,DC_Macul,Mar,1632637.7,9.01
+dc_mdcp,Scl_to_DC,Roma Tomatoes,Chile-Scl,DC_Macul,Apr,1632637.7,9.01
+dc_mdcp,Scl_to_DC,Roma Tomatoes,Chile-Scl,DC_Macul,Dec,1632637.7,9.01
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,Jan,13434.583,10.54
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,Feb,13434.583,10.54
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,Mar,13434.583,10.54
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,Apr,13434.583,10.54
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,May,13434.583,10.54
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,Jun,13434.583,10.54
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,Jul,13434.583,10.54
+dc_mdcp,WM_to_DC,Asparagus,Lo Valledor,DC_Macul,Aug,13434.583,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,May,118448.24,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,Jun,118448.24,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,Jul,118448.24,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,Aug,118448.24,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,Sep,118448.24,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,Oct,118448.24,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,Nov,118448.24,10.54
+dc_mdcp,WM_to_DC,Green Bell Pepper,Lo Valledor,DC_Macul,Dec,118448.24,10.54
+dc_mdcp,WM_to_DC,Roma Tomatoes,Lo Valledor,DC_Macul,May,1632637.7,10.54
+dc_mdcp,WM_to_DC,Roma Tomatoes,Lo Valledor,DC_Macul,Jun,1632637.7,10.54
+dc_mdcp,WM_to_DC,Roma Tomatoes,Lo Valledor,DC_Macul,Jul,1632637.7,10.54
+dc_mdcp,WM_to_DC,Roma Tomatoes,Lo Valledor,DC_Macul,Aug,1632637.7,10.54
+dc_mdcp,WM_to_DC,Roma Tomatoes,Lo Valledor,DC_Macul,Sep,1632637.7,10.54
+dc_mdcp,WM_to_DC,Roma Tomatoes,Lo Valledor,DC_Macul,Oct,1632637.7,10.54
+dc_mdcp,WM_to_DC,Roma Tomatoes,Lo Valledor,DC_Macul,Nov,1632637.7,10.54
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Jan,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Feb,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Mar,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Apr,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,May,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Jun,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Jul,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Aug,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Sep,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Oct,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Nov,5001.502,
+dc_mdcp,DC_to_MDC,Asparagus,DC_Macul,MDC,Dec,5001.502,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Jan,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Feb,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Mar,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Apr,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,May,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Jun,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Jul,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Aug,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Sep,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Oct,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Nov,52515.771,
+dc_mdcp,DC_to_MDC,Broccoli,DC_Macul,MDC,Dec,52515.771,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Jan,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Feb,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Mar,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Apr,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,May,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Jun,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Jul,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Aug,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Sep,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Oct,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Nov,103364.37,
+dc_mdcp,DC_to_MDC,Cauliflower,DC_Macul,MDC,Dec,103364.37,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Jan,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Feb,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Mar,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Apr,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,May,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Jun,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Jul,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Aug,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Sep,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Oct,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Nov,44096.576,
+dc_mdcp,DC_to_MDC,Green Bell Pepper,DC_Macul,MDC,Dec,44096.576,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Jan,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Feb,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Mar,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Apr,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,May,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Jun,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Jul,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Aug,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Sep,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Oct,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Nov,607807.53,
+dc_mdcp,DC_to_MDC,Roma Tomatoes,DC_Macul,MDC,Dec,607807.53,

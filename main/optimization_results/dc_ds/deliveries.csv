@@ -1,0 +1,121 @@
+scenario,product,facility,facility_type,month,quantity_kg,last_mile_distance_km,revenue_usd
+dc_ds,Asparagus,DC_Macul,DC,Jan,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Feb,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Mar,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Apr,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,May,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Jun,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Jul,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Aug,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Sep,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Oct,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Nov,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Macul,DC,Dec,11315.839,10.0,170303.37695
+dc_ds,Asparagus,DC_Maipu,DC,Jan,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Feb,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Mar,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Apr,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,May,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Jun,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Jul,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Aug,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Sep,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Oct,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Nov,1955.1648,10.0,29425.23024
+dc_ds,Asparagus,DC_Maipu,DC,Dec,1955.1648,10.0,29425.23024
+dc_ds,Broccoli,DC_Macul,DC,Jan,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Feb,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Mar,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Apr,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,May,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Jun,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Jul,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Aug,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Sep,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Oct,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Nov,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Macul,DC,Dec,60871.946,10.0,212443.09154000002
+dc_ds,Broccoli,DC_Maipu,DC,Jan,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Feb,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Mar,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Apr,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,May,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Jun,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Jul,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Aug,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Sep,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Oct,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Nov,78473.592,10.0,273872.83608000004
+dc_ds,Broccoli,DC_Maipu,DC,Dec,78473.592,10.0,273872.83608000004
+dc_ds,Cauliflower,DC_Macul,DC,Jan,119811.45,10.0,219254.9535
+dc_ds,Cauliflower,DC_Macul,DC,Feb,119811.45,10.0,219254.9535
+dc_ds,Cauliflower,DC_Macul,DC,Mar,119811.45,10.0,219254.9535
+dc_ds,Cauliflower,DC_Macul,DC,Apr,233860.67,10.0,427965.0261
+dc_ds,Cauliflower,DC_Macul,DC,May,233860.67,10.0,427965.0261
+dc_ds,Cauliflower,DC_Macul,DC,Jun,233860.67,10.0,427965.0261
+dc_ds,Cauliflower,DC_Macul,DC,Jul,233860.67,10.0,427965.0261
+dc_ds,Cauliflower,DC_Macul,DC,Aug,233860.67,10.0,427965.0261
+dc_ds,Cauliflower,DC_Macul,DC,Sep,233860.67,10.0,427965.0261
+dc_ds,Cauliflower,DC_Macul,DC,Oct,119811.45,10.0,219254.9535
+dc_ds,Cauliflower,DC_Macul,DC,Nov,119811.45,10.0,219254.9535
+dc_ds,Cauliflower,DC_Macul,DC,Dec,119811.45,10.0,219254.9535
+dc_ds,Cauliflower,DC_Maipu,DC,Jan,154455.96,10.0,282654.4068
+dc_ds,Cauliflower,DC_Maipu,DC,Feb,154455.96,10.0,282654.4068
+dc_ds,Cauliflower,DC_Maipu,DC,Mar,154455.96,10.0,282654.4068
+dc_ds,Cauliflower,DC_Maipu,DC,Apr,40406.739,10.0,73944.33237
+dc_ds,Cauliflower,DC_Maipu,DC,May,40406.739,10.0,73944.33237
+dc_ds,Cauliflower,DC_Maipu,DC,Jun,40406.739,10.0,73944.33237
+dc_ds,Cauliflower,DC_Maipu,DC,Jul,40406.739,10.0,73944.33237
+dc_ds,Cauliflower,DC_Maipu,DC,Aug,40406.739,10.0,73944.33237
+dc_ds,Cauliflower,DC_Maipu,DC,Sep,40406.739,10.0,73944.33237
+dc_ds,Cauliflower,DC_Maipu,DC,Oct,154455.96,10.0,282654.4068
+dc_ds,Cauliflower,DC_Maipu,DC,Nov,154455.96,10.0,282654.4068
+dc_ds,Cauliflower,DC_Maipu,DC,Dec,154455.96,10.0,282654.4068
+dc_ds,Green Bell Pepper,DC_Macul,DC,Jan,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Feb,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Mar,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Apr,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,May,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Jun,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Jul,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Aug,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Sep,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Oct,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Nov,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Macul,DC,Dec,99767.979,10.0,626542.90812
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Jan,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Feb,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Mar,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Apr,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,May,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Jun,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Jul,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Aug,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Sep,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Oct,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Nov,17238.036,10.0,108254.86608
+dc_ds,Green Bell Pepper,DC_Maipu,DC,Dec,17238.036,10.0,108254.86608
+dc_ds,Roma Tomatoes,DC_Macul,DC,Jan,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Feb,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Mar,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Apr,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,May,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Jun,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Jul,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Aug,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Sep,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Oct,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Nov,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Macul,DC,Dec,1375157.3,10.0,3327880.666
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Jan,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Feb,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Mar,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Apr,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,May,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Jun,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Jul,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Aug,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Sep,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Oct,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Nov,237601.4,10.0,574995.3879999999
+dc_ds,Roma Tomatoes,DC_Maipu,DC,Dec,237601.4,10.0,574995.3879999999

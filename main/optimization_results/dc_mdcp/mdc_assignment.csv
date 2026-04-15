@@ -1,0 +1,13 @@
+scenario,z_name,start_cd,month,u_value,mdc_route_distance_km
+dc_mdcp,z_131078,DC_Macul,Jan,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Feb,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Mar,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Apr,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,May,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Jun,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Jul,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Aug,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Sep,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Oct,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Nov,1.0,79.66
+dc_mdcp,z_131078,DC_Macul,Dec,1.0,79.66

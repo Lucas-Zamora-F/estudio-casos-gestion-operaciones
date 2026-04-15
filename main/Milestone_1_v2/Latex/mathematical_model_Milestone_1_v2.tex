@@ -1,0 +1,550 @@
+\documentclass[12pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{rotating}
+\usepackage{pdflscape}
+
+
+\geometry{a4paper, margin=2.5cm}
+
+\begin{document}
+
+\begin{titlepage}
+
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{../../../source/4f7fe812-7dfc-453d-92a3-e04b74be52a8.jpeg}
+    \end{center}
+
+    \vspace{4cm}
+
+    \begin{center}
+        {\large Case Studies in Operations Management}\\[0.5cm]
+        {\LARGE \textbf{Mathematical Model Milestone 1}}\\[0.3cm]
+        {\Large Business and Logistics Plan for ``Fresh Veggie'' (FV)}
+    \end{center}
+
+    \vfill
+
+    \begin{flushright}
+        \textbf{Authors:}\\
+        Alexander Jesus Balazs Sabag\\
+        Lucas Felipe Camino Alcalde\\
+        Juan Eduardo Escalona Pardo\\
+        Vicente Velasquez Aime\\
+        Lucas Zamora Fochesato\\[0.8cm]
+
+        \textbf{Instructor:}\\
+        Rosa Guadalupe Gonzalez Ramirez\\[0.8cm]
+
+        \textbf{Date:}\\ April 10, 2026
+    \end{flushright}
+
+\end{titlepage}
+
+\section{Model Assumptions}
+
+The model corresponds to a first-stage strategic network design. It evaluates a set of predefined facility configurations and selects the one that maximizes estimated annual profit.
+
+The following simplifying assumptions are adopted:
+
+\begin{itemize}
+    \item Demand is constant over the year and derived from per-capita consumption.
+    \item Each facility configuration $z \in \mathcal{Z}$ has a precomputed coverage level $p(z)$ measured in number of people.
+    \item The company can serve at most a fraction $\alpha^{max}$ of the covered population.
+    \item Revenue is estimated using per-capita annual demand and average selling prices.
+    \item Only fixed opening costs of facilities are considered at this stage.
+    \item The model includes revenues, sourcing costs, transportation costs, and fixed facility opening costs, but does not yet incorporate inventory dynamics, perishability, or service-time uncertainty.
+\end{itemize}
+
+\newpage
+
+\section{Sets}
+\begin{itemize}
+    \item $DC$: set of candidate distribution centers.
+    
+    \item $DS$: set of candidate dark stores.
+    
+    \item $MDCP$: set of candidate parking locations for mobile distribution centers.
+    
+    \item $F = DC \cup DS \cup MDCP$: set of all candidate facilities in the network.
+    
+    \item $P$: set of ports:
+    \[
+    P = \{\text{San Antonio}, \text{Valparaíso}\}
+    \]
+    
+    \item $A$: set of airports:
+    \[
+    A = \{\text{Arturo Merino Benítez International Airport}\}
+    \]
+
+    \item $LC$: Land customs:
+    \[
+    LC = \{\text{Aduana Chacalluta}\}
+    \]
+
+    \item $E = P \cup A \cup  LC$: set of international entry points to Chile.
+    
+    \item $WM$: set of wholesale markets:
+    \[
+    WM = \{\text{La Vega Central}, \text{Lo Valledor}\}
+    \]
+    
+    \item $\mathcal{Z}$: set of all feasible facility configurations, where each $z \in \mathcal{Z}$ is a binary vector indicating which facilities are active.
+    
+     \item $S^{imp}$: set of imported supplier countries:
+    \[
+    S^{imp} = \{\mathrm{US}, \mathrm{Mexico}, \mathrm{Peru}, \mathrm{Ecuador}, \mathrm{Bolivia}, \mathrm{Argentina}, \mathrm{Spain}\}
+    \]
+
+    \item $S^{cl}$: set of domestic supplier regions in Chile:
+    \[
+    S^{cl} = \{\mathrm{Chile\text{-}Scl}, \mathrm{Chile\text{-}Vap}, \mathrm{Chile\text{-}Maul}, \mathrm{Chile\text{-}Coq}\}
+    \]
+
+    \item $S = S^{imp} \cup S^{cl}$: set of all supplier origins, where
+    \[
+    S^{imp} \cap S^{cl} = \varnothing
+    \]
+
+    \item $K$: set of products:
+    \[
+    K = \{\text{Roma Tomatoes}, \text{Cauliflower}, \text{Broccoli}, \text{Asparagus}, \text{Green Bell Pepper}\}
+    \]
+
+    \item $M$: set of months:
+    \[
+    M = \{\text{Jan}, \text{Feb}, \text{Mar}, \text{Apr}, \text{May}, \text{Jun}, \text{Jul}, \text{Aug}, \text{Sep}, \text{Oct}, \text{Nov}, \text{Dec}\}
+    \]
+\end{itemize}
+
+\newpage
+
+\section{Parameters}
+
+\subsection{Demand and Revenue Parameters}
+
+\begin{itemize}
+    \item $p(z)$: number of people covered by configuration $z \in \mathcal{Z}$.
+    
+    \item $\alpha^{max}$: maximum fraction of covered demand that can be served.
+    
+    \item $d^{pc}_{k,m}$: per-capita demand of product $k \in K$ in month $m \in M$, expressed in kg/person/month.
+    
+    \item $P_k$: selling price per kilogram of product $k \in K$, expressed in \$/kg.
+\end{itemize}
+
+\subsection{Facility Parameters}
+
+\begin{itemize}
+    \item $b_{f,z}$: binary parameter equal to 1 if facility $f \in F$ is included in configuration $z$, and 0 otherwise.
+    
+    \item $C^{open}_f$: fixed cost of opening facility $f \in F$, expressed in \$.
+\end{itemize}
+
+\subsection{Availability Parameters}
+
+\begin{itemize}
+    \item $a_{k,s,m}$: binary parameter equal to 1 if product $k \in K$ can be sourced from supplier $s \in S$ during month $m \in M$, and 0 otherwise.
+    
+    \item $p_i^{F}$: number of people covered by facility $i \in F$.
+\end{itemize}
+
+\subsection{Sourcing Costs}
+
+\begin{itemize}
+    \item $C^{pur,imp}_{k,s,e}$: purchasing cost per kilogram of product $k \in K$ acquired from imported supplier $s \in S^{imp}$ through international entry point $e \in E$, expressed in \$/kg.
+
+    \item $C^{pur,cl}_{k,s}$: purchasing cost per kilogram of product $k \in K$ acquired from domestic supplier $s \in S^{cl}$, expressed in \$/kg.
+
+    \item $C^{pur,wm}_{k,w}$: purchasing cost per kilogram of product $k \in K$ acquired from wholesale market $w \in WM$, expressed in \$/kg.
+\end{itemize}
+
+\subsection{Distance Parameters}
+
+\begin{itemize}
+    \item $D^{DC,DS}_{i,j}$: distance between distribution center $i \in DC$ and dark store $j \in DS$, expressed in km.
+
+    \item $D^{DC,MDCP}_{i,n}$: distance between distribution center $i \in DC$ and mobile distribution center parking location $n \in MDCP$, expressed in km.
+
+    \item $D^{E,DC}_{e,i}$: distance between international entry point $e \in E$ and distribution center $i \in DC$, expressed in km.
+
+    \item $D^{S^{cl},DC}_{s,i}$: distance between domestic supplier $s \in S^{cl}$ and distribution center $i \in DC$, expressed in km.
+
+    \item $D^{WM,DC}_{w,i}$: distance between wholesale market $w \in WM$ and distribution center $i \in DC$, expressed in km.
+
+    \item $D^{MDCP,MDCP}_{n,r}$: distance between mobile distribution center parking locations $n,r \in MDCP$, expressed in km.
+
+    \item $D^{lm}_{i}$: average last-mile delivery distance from facility $i \in F$ to customers within its service area, expressed in km.
+    
+    \item $D^{MDC}_{i}$: minimum route distance traveled by the mobile distribution center when departing from distribution center $i \in DC$, visiting all assigned mobile distribution center parking locations, and returning to the same distribution center, expressed in km.
+\end{itemize}
+
+\medskip
+
+The average last-mile distance is approximated assuming that customers are uniformly distributed within the service area of each facility. Under this assumption, the expected distance from the facility to a customer is given by $\frac{2}{3}$ of the service radius.
+
+\[
+D^{lm}_{i} =
+\begin{cases}
+\frac{2}{3} \cdot 15, & \text{if } i \in DC \\
+\frac{2}{3} \cdot 5, & \text{if } i \in DS \\
+\frac{2}{3} \cdot 10, & \text{if } i \in MDCP
+\end{cases}
+\]
+
+\subsection{Transportation Cost Parameters}
+
+\begin{itemize}
+    \item $c^{tr,long}_k$: long-haul transportation cost per kilogram-kilometer of product $k \in K$, expressed in \$/kg/km.
+
+    \item $c^{tr,int}_k$: inter-facility transportation cost per kilogram-kilometer of product $k \in K$, expressed in \$/kg/km.
+
+    \item $c^{lm}_k$: last-mile transportation cost per kilogram-kilometer of product $k \in K$, expressed in \$/kg/km.
+    
+\end{itemize}
+
+\subsection{MDC Transportation Cost Parameter}
+
+\begin{itemize}
+    \item $c^{mov}$: operating cost of moving the mobile distribution center per kilometer traveled, expressed in \$/km.
+\end{itemize}
+
+\subsection{Auxiliary Capacity Parameters}
+
+\begin{itemize}
+    \item $M^{imp}_{k,s,e,m}$: sufficiently large upper bound on the quantity of imported product $k$ that can be purchased from supplier $s$ through entry point $e$ in month $m$.
+
+    \item $M^{cl}_{k,s,m}$: sufficiently large upper bound on the quantity of domestic product $k$ that can be purchased from supplier $s$ in month $m$.
+
+    \item $M^{del}_{k,i,m}$: sufficiently large upper bound on the quantity of product $k$ that can be delivered from facility $i$ to final customers in month $m$.
+
+    \item $M^{DS}_{k,j,m}$: sufficiently large upper bound on the quantity of product $k$ that can be received by dark store $j$ in month $m$.
+
+    \item $M^{MDC}_{k,m}$: sufficiently large upper bound on the quantity of product $k \in K$ that can be loaded from a distribution center to the mobile distribution center during month $m \in M$.
+\end{itemize}
+
+\newpage
+
+\section{Decision Variables}
+
+\subsection{Configuration Selection}
+
+\begin{itemize}
+    \item $y_z \in \{0,1\}$: binary variable equal to 1 if configuration $z \in \mathcal{Z}$ is selected, and 0 otherwise.
+\end{itemize}
+
+\subsection{Sourcing Decisions}
+
+\begin{itemize}
+    \item $q^{imp}_{k,s,e,m} \geq 0$: quantity of product $k \in K$ purchased during month $m \in M$ from imported supplier $s \in S^{imp}$ through international entry point $e \in E$, expressed in kg.
+
+    \item $q^{cl}_{k,s,m} \geq 0$: quantity of product $k \in K$ purchased during month $m \in M$ from domestic supplier $s \in S^{cl}$, expressed in kg.
+
+    \item $q^{wm}_{k,w,m} \geq 0$: quantity of product $k \in K$ purchased during month $m \in M$ from wholesale market $w \in WM$, expressed in kg.
+\end{itemize}
+
+\subsection{Flow Variables}
+
+\begin{itemize}
+    \item $x^{E,DC}_{k,e,i,m} \geq 0$: quantity of product $k \in K$ transported from entry point $e \in E$ to distribution center $i \in DC$ during month $m$, expressed in kg.
+
+    \item $x^{S^{cl},DC}_{k,s,i,m} \geq 0$: quantity of product $k \in K$ transported from domestic supplier $s \in S^{cl}$ to distribution center $i \in DC$ during month $m$, expressed in kg.
+
+    \item $x^{WM,DC}_{k,w,i,m} \geq 0$: quantity of product $k \in K$ transported from wholesale market $w \in WM$ to distribution center $i \in DC$ during month $m$, expressed in kg.
+
+    \item $x^{DC,DS}_{k,i,j,m} \geq 0$: quantity of product $k \in K$ transported from distribution center $i \in DC$ to dark store $j \in DS$ during month $m$, expressed in kg.
+
+    \item $x^{DC,MDC}_{k,i,m} \geq 0$: quantity of product $k \in K$ transported from distribution center $i \in DC$ to the mobile distribution center during month $m \in M$, expressed in kg.
+\end{itemize}
+
+\subsection{MDC Assignment Variables}
+
+\begin{itemize}
+    \item $u_{j,m} \in \{0,1\}$: binary variable equal to 1 if distribution center $j \in DC$ supplies the mobile distribution center during month $m \in M$, and 0 otherwise.
+\end{itemize}
+
+\subsection{Delivery}
+
+\begin{itemize}
+    \item $x^{F,C}_{k,i,m} \geq 0$: quantity of product $k \in K$ delivered from facility $i \in F$ to final customers during month $m \in M$, expressed in kg.
+\end{itemize}
+
+\newpage
+
+\section{Objective Function}
+
+The objective is to maximize total profit, defined as total sales revenue minus sourcing, transportation, and facility opening costs.
+
+\subsection{Revenue}
+
+Revenue is obtained from the quantity of product delivered to final customers.
+
+\[
+\text{Revenue}
+=
+\sum_{m \in M}\sum_{k \in K}\sum_{i \in F}
+P_k \, x^{F,C}_{k,i,m}
+\]
+
+\subsection{Acquisition Cost}
+
+Acquisition cost includes purchases from imported suppliers, domestic suppliers, and wholesale markets.
+
+\[
+\text{Acquisition Cost}
+=
+\sum_{m \in M}\sum_{k \in K}
+\left(
+\sum_{s \in S^{imp}}\sum_{e \in E}
+C^{pur,imp}_{k,s,e}\, q^{imp}_{k,s,e,m}
++
+\sum_{s \in S^{cl}}
+C^{pur,cl}_{k,s}\, q^{cl}_{k,s,m}
++
+\sum_{w \in WM}
+C^{pur,wm}_{k,w}\, q^{wm}_{k,w,m}
+\right)
+\]
+
+\subsection{Transportation Cost}
+
+Transportation cost is divided into long-haul transportation, inter-facility transportation, and last-mile delivery.
+
+\subsubsection{Long-Haul Transportation Cost}
+
+This cost includes product movements from international entry points, domestic suppliers, and wholesale markets to distribution centers.
+
+\begin{align*}
+\text{Long-Haul Transportation Cost}
+=
+\sum_{m \in M} \sum_{k \in K}
+\Bigg(
+& \sum_{e \in E} \sum_{i \in DC}
+c^{tr,long}_k \, D^{E,DC}_{e,i} \, x^{E,DC}_{k,e,i,m} \\
+& + \sum_{s \in S^{cl}} \sum_{i \in DC}
+c^{tr,long}_k \, D^{S^{cl},DC}_{s,i} \, x^{S^{cl},DC}_{k,s,i,m} \\
+& + \sum_{w \in WM} \sum_{i \in DC}
+c^{tr,long}_k \, D^{WM,DC}_{w,i} \, x^{WM,DC}_{k,w,i,m}
+\Bigg)
+\end{align*}
+
+\subsubsection{Inter-Facility Transportation Cost}
+
+This cost includes product flows between facilities inside the distribution network.
+
+\begin{align*}
+\text{Inter-Facility Transportation Cost}
+=
+\sum_{m \in M} \sum_{k \in K}
+\Bigg(
+& \sum_{i \in DC} \sum_{j \in DS}
+c^{tr,int}_k \, D^{DC,DS}_{i,j} \, x^{DC,DS}_{k,i,j,m}
+\Bigg)
+\end{align*}
+
+\subsubsection{Last-Mile Transportation Cost}
+
+This cost is proportional to the delivered quantity and the average last-mile distance associated with each facility.
+
+\[
+\text{Last-Mile Transportation Cost}
+=
+\sum_{m \in M}\sum_{k \in K}\sum_{i \in F}
+c^{lm}_k \, D^{lm}_i \, x^{F,C}_{k,i,m}
+\]
+
+\subsection{Facility Opening Cost}
+
+Facility opening cost depends on the selected configuration.
+
+\[
+\text{Facility Opening Cost}
+=
+\sum_{z \in \mathcal{Z}}
+\left(
+\sum_{f \in F} C^{open}_f \, b_{f,z}
+\right) y_z
+\]
+
+\subsubsection{Mobile Distribution Center Movement Cost}
+
+This cost accounts for the movement of the mobile distribution center from a distribution center, through its assigned parking locations, and back to the same distribution center.
+
+\[
+\text{MDC Movement Cost}
+=
+\sum_{m \in M}\sum_{i \in DC}
+c^{mov}\, D^{MDC}_{i}\, u_{i,m}
+\]
+
+\subsection{Complete Objective Function}
+
+\begin{align*}
+\max \quad 
+& \text{Revenue} \\
+& - \text{Acquisition Cost} \\
+& - \text{Long-Haul Transportation Cost} \\
+& - \text{Inter-Facility Transportation Cost} \\
+& - \text{Last-Mile Transportation Cost} \\
+& - \text{MDC Movement Cost} \\
+& - \text{Facility Opening Cost}
+\end{align*}
+
+\newpage
+
+\section{Constraints}
+
+\subsection{Configuration Selection}
+
+\[
+\sum_{z \in \mathcal{Z}} y_z = 1
+\]
+
+\subsection{Availability Constraints}
+
+\[
+q^{imp}_{k,s,e,m} \leq M^{imp}_{k,s,e,m} \, a_{k,s,m},
+\quad \forall k \in K,\; \forall s \in S^{imp},\; \forall e \in E,\; \forall m \in M
+\]
+
+\[
+q^{cl}_{k,s,m} \leq M^{cl}_{k,s,m} \, a_{k,s,m},
+\quad \forall k \in K,\; \forall s \in S^{cl},\; \forall m \in M
+\]
+
+\subsection{Purchase-Flow Consistency}
+
+\[
+\sum_{i \in DC} x^{E,DC}_{k,e,i,m}
+=
+\sum_{s \in S^{imp}} q^{imp}_{k,s,e,m},
+\quad \forall k \in K,\; \forall e \in E,\; \forall m \in M
+\]
+
+\[
+\sum_{i \in DC} x^{S^{cl},DC}_{k,s,i,m}
+=
+q^{cl}_{k,s,m},
+\quad \forall k \in K,\; \forall s \in S^{cl},\; \forall m \in M
+\]
+
+\[
+\sum_{i \in DC} x^{WM,DC}_{k,w,i,m}
+=
+q^{wm}_{k,w,m},
+\quad \forall k \in K,\; \forall w \in WM,\; \forall m \in M
+\]
+
+\subsection{Flow Balance at Distribution Centers}
+
+\begin{align*}
+& \sum_{e \in E} x^{E,DC}_{k,e,i,m}
++ \sum_{s \in S^{cl}} x^{S^{cl},DC}_{k,s,i,m}
++ \sum_{w \in WM} x^{WM,DC}_{k,w,i,m} \\
+& =
+\sum_{j \in DS} x^{DC,DS}_{k,i,j,m}
++ x^{DC,MDC}_{k,i,m}
++ x^{F,C}_{k,i,m},
+\quad \forall k \in K,\; \forall i \in DC,\; \forall m \in M
+\end{align*}
+
+\subsection{Activation Constraints}
+
+\[
+x^{F,C}_{k,i,m}
+\leq
+M^{del}_{k,i,m}
+\sum_{z \in \mathcal{Z}} b_{i,z} y_z,
+\quad \forall k \in K,\; \forall i \in F,\; \forall m \in M
+\]
+
+\[
+\sum_{i \in DC} x^{DC,DS}_{k,i,j,m}
+\leq
+M^{DS}_{k,j,m}
+\sum_{z \in \mathcal{Z}} b_{j,z} y_z,
+\quad \forall k \in K,\; \forall j \in DS,\; \forall m \in M
+\]
+
+\subsection{Demand Constraints}
+
+\textbf{Network-Level Demand Constraint}
+\[
+\sum_{i \in F} x^{F,C}_{k,i,m}
+\le
+\alpha^{\max}
+\sum_{z \in \mathcal{Z}} p(z)\, d^{pc}_{k,m}\, y_z,
+\quad \forall k \in K,\; \forall m \in M
+\]
+
+\textbf{Facility-Level Demand Constraint}
+\[
+x^{F,C}_{k,i,m}
+\le
+\alpha^{\max}\, d^{pc}_{k,m}\, p_i^{F}
+\sum_{z \in \mathcal{Z}} b_{i,z} \, y_z,
+\quad \forall k \in K,\; \forall i \in F,\; \forall m \in M
+\]
+
+\subsection{Mobile Distribution Center Constraints}
+
+\[
+\sum_{i \in DC} x^{DC,MDC}_{k,i,m}
+=
+\sum_{n \in MDCP} x^{F,C}_{k,n,m},
+\quad \forall k \in K,\; \forall m \in M
+\]
+
+\[
+\sum_{j \in DC} u_{j,m} = 1,
+\quad \forall m \in M
+\]
+
+\[
+x^{DC,MDC}_{k,j,m}
+\leq
+M^{MDC}_{k,m}\,u_{j,m},
+\quad \forall k \in K,\; \forall j \in DC,\; \forall m \in M
+\]
+\subsection{Binary Variables}
+
+\[
+y_z \in \{0,1\},
+\quad \forall z \in \mathcal{Z}
+\]
+
+\[
+u_{j,m} \in \{0,1\},
+\quad \forall j \in DC, \; \forall m \in M
+\]
+
+\subsection{Non-Negativity Constraints}
+
+\[
+q^{imp}_{k,s,e,m},\;
+q^{cl}_{k,s,m},\;
+q^{wm}_{k,w,m}
+\geq 0,
+\quad \forall k \in K,\; \forall m \in M
+\]
+
+\[
+x^{E,DC}_{k,e,i,m},\;
+x^{S^{cl},DC}_{k,s,i,m},\;
+x^{WM,DC}_{k,w,i,m},\;
+x^{DC,DS}_{k,i,j,m},\;
+x^{DC,MDC}_{k,i,m},\;
+x^{F,C}_{k,i,m}
+\geq 0
+\]
+
+\end{document}

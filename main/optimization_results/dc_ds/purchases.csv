@@ -1,0 +1,61 @@
+scenario,purchase_type,product,origin,entry_point,month,quantity_kg,unit_cost_usd_per_kg,total_purchase_cost_usd
+dc_ds,import,Broccoli,Ecuador,San Antonio,Jan,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Feb,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Mar,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Apr,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,May,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Jun,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Jul,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Aug,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Sep,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Oct,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Nov,139345.54,1.23,171395.0142
+dc_ds,import,Broccoli,Ecuador,San Antonio,Dec,139345.54,1.23,171395.0142
+dc_ds,import,Cauliflower,Spain,San Antonio,Jan,274267.41,1.41,386717.04809999996
+dc_ds,import,Cauliflower,Spain,San Antonio,Feb,274267.41,1.41,386717.04809999996
+dc_ds,import,Cauliflower,Spain,San Antonio,Mar,274267.41,1.41,386717.04809999996
+dc_ds,import,Cauliflower,Spain,San Antonio,Oct,274267.41,1.41,386717.04809999996
+dc_ds,import,Cauliflower,Spain,San Antonio,Nov,274267.41,1.41,386717.04809999996
+dc_ds,import,Cauliflower,Spain,San Antonio,Dec,274267.41,1.41,386717.04809999996
+dc_ds,domestic,Asparagus,Chile-Scl,,Sep,13271.004,0.924,12262.407696000002
+dc_ds,domestic,Asparagus,Chile-Scl,,Oct,13271.004,0.924,12262.407696000002
+dc_ds,domestic,Asparagus,Chile-Scl,,Nov,13271.004,0.924,12262.407696000002
+dc_ds,domestic,Asparagus,Chile-Scl,,Dec,13271.004,0.924,12262.407696000002
+dc_ds,domestic,Cauliflower,Chile-Scl,,Apr,274267.41,1.1355,311430.644055
+dc_ds,domestic,Cauliflower,Chile-Scl,,May,274267.41,1.1355,311430.644055
+dc_ds,domestic,Cauliflower,Chile-Scl,,Jun,274267.41,1.1355,311430.644055
+dc_ds,domestic,Cauliflower,Chile-Scl,,Jul,274267.41,1.1355,311430.644055
+dc_ds,domestic,Cauliflower,Chile-Scl,,Aug,274267.41,1.1355,311430.644055
+dc_ds,domestic,Cauliflower,Chile-Scl,,Sep,274267.41,1.1355,311430.644055
+dc_ds,domestic,Green Bell Pepper,Chile-Scl,,Jan,117006.02,0.77,90094.6354
+dc_ds,domestic,Green Bell Pepper,Chile-Scl,,Feb,117006.02,0.77,90094.6354
+dc_ds,domestic,Green Bell Pepper,Chile-Scl,,Mar,117006.02,0.77,90094.6354
+dc_ds,domestic,Green Bell Pepper,Chile-Scl,,Apr,117006.02,0.77,90094.6354
+dc_ds,domestic,Roma Tomatoes,Chile-Scl,,Jan,1612758.7,0.6265,1010393.3255499998
+dc_ds,domestic,Roma Tomatoes,Chile-Scl,,Feb,1612758.7,0.6265,1010393.3255499998
+dc_ds,domestic,Roma Tomatoes,Chile-Scl,,Mar,1612758.7,0.6265,1010393.3255499998
+dc_ds,domestic,Roma Tomatoes,Chile-Scl,,Apr,1612758.7,0.6265,1010393.3255499998
+dc_ds,domestic,Roma Tomatoes,Chile-Scl,,Dec,1612758.7,0.6265,1010393.3255499998
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,Jan,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,Feb,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,Mar,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,Apr,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,May,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,Jun,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,Jul,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Asparagus,Lo Valledor,,Aug,13271.004,1.32,17517.725280000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,May,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,Jun,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,Jul,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,Aug,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,Sep,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,Oct,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,Nov,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Green Bell Pepper,Lo Valledor,,Dec,117006.02,1.1,128706.62200000002
+dc_ds,wholesale_market,Roma Tomatoes,Lo Valledor,,May,1612758.7,0.895,1443419.0365
+dc_ds,wholesale_market,Roma Tomatoes,Lo Valledor,,Jun,1612758.7,0.895,1443419.0365
+dc_ds,wholesale_market,Roma Tomatoes,Lo Valledor,,Jul,1612758.7,0.895,1443419.0365
+dc_ds,wholesale_market,Roma Tomatoes,Lo Valledor,,Aug,1612758.7,0.895,1443419.0365
+dc_ds,wholesale_market,Roma Tomatoes,Lo Valledor,,Sep,1612758.7,0.895,1443419.0365
+dc_ds,wholesale_market,Roma Tomatoes,Lo Valledor,,Oct,1612758.7,0.895,1443419.0365
+dc_ds,wholesale_market,Roma Tomatoes,Lo Valledor,,Nov,1612758.7,0.895,1443419.0365

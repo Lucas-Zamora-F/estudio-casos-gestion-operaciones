@@ -1,0 +1,4 @@
+scenario,z_name,facility,facility_type,covered_population,open_cost_usd
+dc_mdcp,z_131078,DC_Macul,DC,4714932.830452755,8810000.0
+dc_mdcp,z_131078,MDCP_Pudahuel,MDCP,560845.8643019407,1629.85
+dc_mdcp,z_131078,MDCP_Quilicura,MDCP,1523113.2918442518,374425.0
